@@ -1,0 +1,120 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://status.pypestream.com/ and its Statuspage API (/api/v2/status.json,
+  /api/v2/components.json), Pypestream's ReadMe API registry metadata, and the published API
+  reference; all probed 2026-08-26
+status_page:
+  url: https://status.pypestream.com/
+  vendor: Atlassian Statuspage
+  http_status: 200
+  machine_readable: true
+  api:
+  - url: https://status.pypestream.com/api/v2/status.json
+    status: 200
+  - url: https://status.pypestream.com/api/v2/components.json
+    status: 200
+  page_id: g92lzr2ffj64
+  time_zone: America/New_York
+  observed_indicator: none
+  observed_description: All Systems Operational
+  component_count: 66
+  component_groups_observed:
+  - AgentPro
+  - Agent Pro
+  - Contact Center
+  - Solutions
+  - Manager & Admin
+  - Pypes
+  regions_observed:
+  - US-Production
+  - US-Sandbox
+  - AUS - Production LIVE
+  note: >-
+    A genuine, machine-readable status surface covering 66 components across US production, US
+    sandbox and an Australian production region. This is the strongest operational artifact
+    Pypestream publishes.
+versioning:
+  scheme: path-segment, per API, not global
+  detail: >-
+    Each contract versions its own paths independently and there is no company-wide version policy
+    page. Reporting is at /api/v2/. Contact Center mixes v1 and v2 in one document -- integrations
+    on /contactCenter/v2/, conversations and settings on /contactCenter/v1/. Engagement is at
+    /messaging/v1/ and its overview text calls itself "Version: 1". Analytics is unversioned in the
+    path (/api/...) and carries info.version 1.0.0. The JavaScript SDK contract declares
+    info.version 3.0.0.
+  header_versioning: false
+  version_policy_page: null
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No deprecation or sunset policy is published, no operation in any of the six contracts carries
+    `deprecated: true`, and no Sunset or Deprecation response header is documented. There is,
+    however, visible drift that a policy would normally cover: the Middleware API contract duplicates
+    twelve of the Contact Center API's operationIds on the same paths, and the Contact Center
+    document supersedes the Middleware one for conversationHistory by moving it from
+    /contactCenter/v1/ to /contactCenter/v2/ -- with no statement anywhere about which document a
+    consumer should follow or when the v1 path stops working.
+sla:
+  published: false
+  note: >-
+    No public SLA or uptime commitment. The security page claims "availability SLAs" are covered by
+    the SOC 2 audit, but no numeric target is published.
+contract_freshness:
+  source: Pypestream's own ReadMe API registry metadata, read 2026-08-26
+  definitions:
+  - filename: schema-refactored.yaml
+    title: Analytics API
+    created: '2025-10-13'
+    updated: '2026-01-29'
+  - filename: pypestream-openapi-spec.json
+    title: Pypestream JavaScript SDK API
+    created: '2025-09-30'
+    updated: '2025-09-30'
+  - filename: contact-center-api.json
+    created: '2025-09-29'
+    updated: '2025-09-29'
+  - filename: engagement-api.json
+    created: '2025-09-29'
+    updated: '2025-09-29'
+  - filename: insights-api.json
+    created: '2025-09-29'
+    updated: '2025-09-29'
+  - filename: middleware-api-1.json
+    created: '2025-09-29'
+    updated: '2025-09-29'
+  - filename: reporting-api.json
+    created: '2025-09-29'
+    updated: '2025-09-29'
+  - filename: reporting-api-1.json
+    created: '2025-09-29'
+    updated: '2025-09-29'
+  note: >-
+    Only the Analytics API has been touched in 2026. Every documentation page fetched carries
+    updatedAt 2025-09-29 or 2025-09-30.
+defects:
+- id: duplicate-registry-entries
+  detail: >-
+    reporting-api.json and reporting-api-1.json are byte-identical 20,408-byte documents registered
+    twice under different UUIDs. Pypestream's registry therefore reports eight API definitions where
+    six distinct contracts exist.
+- id: insights-api-points-at-a-preview-deployment
+  detail: >-
+    The published Insights API contract names https://analytics-eight-eta.vercel.app/live/ and
+    /sandbox/ plus two http://localhost:5000 servers. The Vercel host still resolves and answers
+    (404 on /live/, probed 2026-08-26) but carries no Pypestream branding, and no pypestream.com
+    host is named anywhere in the document.
+- id: plaintext-scheme-in-contact-center-contract
+  detail: >-
+    The Contact Center API declares its servers as http://middleware.pypestream.com/ and
+    http://middleware-sandbox.pypestream.com/. The host in fact 301-redirects http to https (probed
+    2026-08-26), and the Reporting API overview states "The reporting API must be used using HTTPS
+    protocol" -- so the published scheme is wrong in the direction that matters.
+- id: reporting-api-has-no-operationids
+  detail: >-
+    None of the Reporting API's six operations declares an operationId, which blocks generated
+    clients and tool bindings from naming them.

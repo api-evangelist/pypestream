@@ -1,0 +1,37 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Pypestream Analytics API
+  version: 1.0.0
+extends: openapi/pypestream-analytics-api-openapi.json
+x-generated: '2026-08-26'
+x-method: generated
+x-source: API Evangelist enrichment pass over Pypestream published docs and probes, 2026-08-26. Records
+  facts stated on developers.pypestream.com or observed by probe that the OpenAPI itself omits. Never
+  mutates the original.
+actions:
+- target: $.info
+  description: Attach enrichment provenance.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/pypestream
+      artifacts: https://github.com/api-evangelist/pypestream
+      enriched: '2026-08-26'
+- target: $.info
+  description: Record that no failure mode is declared anywhere in this contract.
+  update:
+    x-api-evangelist-defect: None of the 43 operations declares a 4xx or 5xx response. A generated client
+      has no documented error to handle.
+    x-error-catalog: errors/pypestream-problem-types.yml
+- target: $.info
+  description: Record the reversibility posture of the batch export write surface.
+  update:
+    x-reversibility: batch_exports_pause_create / batch_exports_unpause_create is a fully symmetric reversal;
+      batch_exports_backfill_create is the compensating replay for a gap; batch_exports_destroy is permanent.
+      No time window is published for any of them.
+    x-reversibility-detail: conventions/pypestream-conventions.yml
+- target: $.info
+  description: Record the upstream lineage evidenced on Pypestream's own hosts.
+  update:
+    x-upstream: Derived from PostHog. analytics.pypestream.com/.well-known/security.txt serves PostHog's
+      upstream file, and Pypestream maintains a PostHog fork at github.com/pypestream/posthog.
+    x-pagination: limit/offset with a count/next/previous/results envelope

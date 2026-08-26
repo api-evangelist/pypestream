@@ -1,0 +1,69 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  openapi/ servers[] blocks published by Pypestream,
+  https://developers.pypestream.com/reference/engagement-api-websocket,
+  https://status.pypestream.com/api/v2/components.json; all read 2026-08-26
+published: true
+model: separate sandbox hosts, not test-mode keys
+detail: >-
+  Pypestream ships a parallel sandbox estate addressed by hostname. There is no test-mode key
+  prefix, no live/test toggle on a single host, and no hosted test data: a sandbox is a different
+  environment reached at a different domain with its own credentials. Sandbox is a first-class part
+  of the operational surface -- Pypestream's own status page carries a US-Sandbox component
+  alongside US-Production.
+environments:
+- api: pypestream:reporting-api
+  live: https://reporting.pypestream.com/api/v2/
+  sandbox: https://reporting-sandbox.pypestream.com/api/v2/
+  source: openapi/pypestream-reporting-api-openapi.json servers[]
+  probe:
+    url: https://reporting-sandbox.pypestream.com/api/v2/
+    status: 404
+    note: host resolves and answers; 404 is the API root, not a dead host
+- api: pypestream:contact-center-api
+  live: http://middleware.pypestream.com/
+  sandbox: http://middleware-sandbox.pypestream.com/
+  source: openapi/pypestream-contact-center-api-openapi.json servers[]
+  probe:
+    url: https://middleware-sandbox.pypestream.com/
+    status: 404
+  note: >-
+    Published with an http:// scheme; the host redirects to https. See
+    lifecycle/pypestream-lifecycle.yml defect plaintext-scheme-in-contact-center-contract.
+- api: pypestream:engagement-api
+  live: https://engagement-api.pypestream.com/
+  sandbox: https://engagement-api-sandbox.pypestream.com/
+  source: openapi/pypestream-engagement-api-openapi.json servers[]
+  probe:
+    url: https://engagement-api-sandbox.pypestream.com/
+    status: 404
+- api: pypestream:engagement-api
+  surface: websocket
+  live: wss://engagement-api.pypestream.com/socket/websocket
+  sandbox: wss://engagement-api-sandbox.pypestream.com/socket/websocket
+  source: https://developers.pypestream.com/reference/engagement-api-websocket
+no_sandbox:
+- api: pypestream:analytics-api
+  note: >-
+    The Analytics API declares exactly one server, https://analytics.pypestream.com/ ("Production
+    server US"). No sandbox host is published. The product's own concept of a "Dataset" is
+    documented as typically corresponding to an environment ("Production", "Testing",
+    "Development"), so isolation there is a data partition inside production rather than a separate
+    environment.
+- api: pypestream:javascript-sdk
+  note: Documentation-only contract; no environments.
+test_credentials:
+  published: false
+  note: >-
+    No test API keys, no shared demo tenant and no published test values of any kind. Sandbox
+    credentials are issued the same way live ones are -- a Conversation Manager creates a Client ID
+    and Client Secret inside the Pypestream platform. Nothing is self-serve.
+test_data:
+  fixtures: false
+  triggers: false
+  time_simulation: false
+  note: >-
+    No fixture library, no event-trigger tooling and no test clock is documented. There is no
+    documented way to force a webhook event, simulate an agent going offline, or replay a
+    conversation.

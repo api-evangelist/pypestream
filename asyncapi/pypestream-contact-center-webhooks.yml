@@ -1,0 +1,78 @@
+generated: '2026-08-26'
+method: searched
+source: https://developers.pypestream.com/reference/contact-center-webhooks (+ .md), fetched 2026-08-26
+transport: HTTPS POST, JSON payload, delivered to a customer-hosted endpoint
+direction: Pypestream -> customer
+description: >-
+  Pypestream pushes real-time notifications to a customer endpoint when an event happens in their
+  account, principally around escalating an end user from an automated Pype to a live agent. The
+  customer registers a publicly reachable HTTPS endpoint and returns a 2xx status per event.
+provider_caveat: >-
+  Quoted from the docs: "This is a list of all the types of events we currently send. We may add
+  more at any time, so in developing and maintaining your code, you should not assume that only
+  these types exist." The catalog is explicitly non-exhaustive and non-versioned.
+setup_steps:
+- Identify the events to monitor and the event payloads to parse.
+- Create a webhook endpoint as an HTTP endpoint on your local server.
+- Handle requests from Pypestream by parsing each event object and returning 2xx response status codes.
+- Test that your webhook endpoint is working properly.
+- Deploy your webhook endpoint so it is a publicly accessible HTTPS URL.
+events:
+- name: Availability
+  event: agents/availability
+  trigger: Occurs whenever an end-user requests to be escalated.
+  attributes:
+  - name: available
+    type: boolean
+    description: Indicates agents availability.
+  - name: estimatedWaitTime
+    type: integer
+    description: Estimated wait time in seconds.
+  - name: hoursOfOperation
+    type: boolean
+    description: Represents when a program is open or closed.
+  - name: queueDepth
+    type: integer
+    description: Number of chats waiting in the queue.
+  - name: status
+    type: string
+    description: >-
+      Indicates whether there is an active agent with a chat slot available (online), there are
+      agents logged in but all their chat slots are full (busy), or all agents are on a busy status
+      or are not logged in (offline).
+- name: WaitTime
+  event: agents/waitTime
+  trigger: Occurs whenever agents are busy.
+  attributes:
+  - name: estimatedWaitTime
+    type: integer
+    description: Estimated wait time in seconds.
+- name: Escalate
+  event: conversations/{conversationId}/escalate
+  trigger: Occurs whenever an end-user is escalated.
+- name: Type
+  event: conversations/{conversationId}/type
+  trigger: Occurs when an end-user typing status changes.
+- name: Messages
+  event: conversations/{conversationId}/messages/{messageId}
+  trigger: Occurs when an end-user sends a message.
+- name: End
+  event: conversations/{conversationId}/end
+  trigger: Occurs when a conversation is ended.
+event_count: 6
+signature_verification:
+  documented: false
+  note: >-
+    The webhook reference documents no signing secret, no signature header and no replay-protection
+    scheme, and prescribes no verification step -- the five setup steps end at "deploy your
+    endpoint". A consumer is given no published way to prove a delivery came from Pypestream.
+delivery_semantics:
+  retries_documented: false
+  ordering_documented: false
+  note: Retry policy, backoff and delivery ordering are not stated in the published reference.
+asyncapi_document: null
+asyncapi_note: >-
+  Pypestream publishes no AsyncAPI for the webhook surface. The sibling Engagement API WebSocket
+  surface, which IS fully documented down to payload fields, is captured as a generated AsyncAPI 3.0
+  document at asyncapi/pypestream-engagement-api-asyncapi.yml. The webhook payload fields are only
+  documented for two of the six events, which is why this file is a catalog rather than a spec.

@@ -1,0 +1,81 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  openapi/pypestream-javascript-sdk-openapi.json (published by Pypestream in its own API registry),
+  https://developers.pypestream.com/reference/documentation (read 2026-08-26)
+summary: >-
+  Pypestream's primary integration surface is not a REST call, it is an embedded UI component: a
+  JavaScript-loaded chat interface that a customer drops into a web page in popup ("window") or
+  inline mode. It is documented unusually -- as an OpenAPI document whose 17 "operations" are the
+  SDK's methods and event handlers rather than HTTP endpoints, a framing the spec itself flags
+  ("This is a client-side SDK, not a REST API").
+families:
+- name: Pypestream Chat Widget
+  kind: embedded chat interface
+  version: '3.0.0'
+  version_source: info.version of the SDK contract
+  license: Proprietary (https://pypestream.com/terms)
+  loader:
+    type: script tag
+    snippet: '<script src="https://your-pypestream-domain/config.js"></script>'
+    pinned: false
+    note: >-
+      The documented loader path carries no version segment and the script is served from a
+      per-customer Pypestream domain, so a consumer cannot pin a build. See
+      packages/pypestream-packages.yml.
+  global: Pypestream
+  display_modes:
+  - name: window
+    description: Opens chat in a popup window.
+  - name: inline
+    description: Embeds chat directly in the webpage.
+  api_surface:
+    configuration:
+    - config
+    - updatePypestreamConfig
+    lifecycle:
+    - boot
+    - shutdown
+    - restartChat
+    display_control:
+    - show
+    - hide
+    - toggle
+    - isVisible
+    event_handlers:
+    - onShow
+    - onHide
+    - onChatEnd
+    - onChatRestart
+    - onSetupComplete
+    - onFirstMessage
+    - onMount
+    advanced:
+    - registerForEvents
+  method_count: 17
+  config_schema: PypestreamConfig
+  backing_api: pypestream:engagement-api
+  backing_note: >-
+    The widget is the reference consumer of the Engagement API and its Phoenix Channels WebSocket;
+    the `gateway` field on the chat:start event enumerates `pypestream_widget`.
+- name: Pypestream Analytics client
+  kind: instrumentation library
+  registry: npm
+  package: pypestream-analytics-js
+  version: 1.69.3
+  published: '2025-03-27'
+  note: >-
+    Not a UI component. Recorded here only to keep the two client-side libraries distinguishable;
+    the detail lives in packages/pypestream-packages.yml.
+absent:
+- kind: web components
+  note: No custom-element or web-component library is published.
+- kind: element libraries
+  note: No React, Vue or Angular component package is published on any registry.
+- kind: embedded dashboards
+  note: >-
+    No embeddable analytics or reporting surface. The Analytics API returns insight, dashboard and
+    KPI data as JSON but Pypestream publishes no widget to render it; the Reporting API overview
+    explicitly tells consumers NOT to point a dashboard at the API and to warehouse the data first.
+- kind: hosted prebuilt pages
+  note: No hosted checkout, portal or onboarding page is published.

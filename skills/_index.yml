@@ -1,0 +1,51 @@
+generated: '2026-08-26'
+method: generated
+source: >-
+  Grounded in openapi/*.json in this repo and the Pypestream reference pages cited in each skill.
+  Every operationId, path, parameter, status code, event name and published limit quoted in these
+  skills was read from a Pypestream-published document; none is invented.
+note: >-
+  Pypestream publishes no AGENTS.md, no skills index and no agent-facing guide of any kind. Its
+  developer portal declares an agent_skills_index feature but serves nothing at any skills path
+  (all 404). These four skills are written by API Evangelist over Pypestream's published contracts.
+provider_published_skills: false
+skills:
+- name: pypestream-embed-and-run-a-chat
+  file: skills/pypestream-embed-and-run-a-chat.md
+  api: pypestream:engagement-api
+  operations: 7
+  summary: >-
+    The marquee flow. Half REST, half Phoenix Channels WebSocket, gated on chat:ready or you get a
+    428.
+- name: pypestream-escalate-to-a-live-agent
+  file: skills/pypestream-escalate-to-a-live-agent.md
+  api: pypestream:contact-center-api
+  operations: 14
+  summary: >-
+    Webhook-driven escalation from an automated Pype to a human agent, with context handoff.
+- name: pypestream-pull-conversation-and-agent-reporting
+  file: skills/pypestream-pull-conversation-and-agent-reporting.md
+  api: pypestream:reporting-api
+  operations: 6
+  summary: >-
+    Warehouse extraction under a 400/hour limit, per-endpoint window maxima and a silent 30-day
+    retention cliff.
+- name: pypestream-export-analytics-to-a-warehouse
+  file: skills/pypestream-export-analytics-to-a-warehouse.md
+  api: pypestream:analytics-api
+  operations: 22
+  summary: >-
+    Batch exports to S3 or Snowflake with the pause/unpause/backfill reversal path spelled out.
+not_written:
+- api: pypestream:javascript-sdk
+  reason: >-
+    The contract is documentation-only and describes client-side SDK methods, not callable HTTP
+    operations. A skill grounded in it would teach an agent to POST to endpoints that do not exist.
+- api: pypestream:insights-api
+  reason: >-
+    One operation, and every published server is a Vercel preview deployment or localhost. No
+    production host to ground a skill in.
+- api: pypestream:middleware-api
+  reason: >-
+    Twelve of its operations duplicate the Contact Center API on identical paths, and it publishes
+    no host. Covered by the escalation skill instead.

@@ -1,0 +1,40 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Pypestream Contact Center API
+  version: 1.0.0
+extends: openapi/pypestream-contact-center-api-openapi.json
+x-generated: '2026-08-26'
+x-method: generated
+x-source: API Evangelist enrichment pass over Pypestream published docs and probes, 2026-08-26. Records
+  facts stated on developers.pypestream.com or observed by probe that the OpenAPI itself omits. Never
+  mutates the original.
+actions:
+- target: $.info
+  description: Attach enrichment provenance.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/pypestream
+      artifacts: https://github.com/api-evangelist/pypestream
+      enriched: '2026-08-26'
+- target: $.servers
+  description: Note that the published servers use a plaintext http:// scheme while the hosts redirect
+    to https.
+  update:
+  - url: http://middleware.pypestream.com/
+    description: Live
+    x-api-evangelist-note: Published as http://; host 301-redirects to https. Probed 2026-08-26.
+  - url: http://middleware-sandbox.pypestream.com/
+    description: Sandbox
+    x-api-evangelist-note: Published as http://; host 301-redirects to https. Probed 2026-08-26.
+- target: $.info
+  description: Link the webhook catalog, which is documented in prose with no machine-readable counterpart.
+  update:
+    x-webhooks: asyncapi/pypestream-contact-center-webhooks.yml
+    x-webhooks-docs: https://developers.pypestream.com/reference/contact-center-webhooks
+    x-webhook-signature-verification: none documented
+- target: $.info
+  description: Record the version split inside a single document.
+  update:
+    x-api-evangelist-note: This document mixes /contactCenter/v1/ (conversations, settings) and /contactCenter/v2/
+      (integrations, history) in one contract, and duplicates twelve operationIds with the Middleware
+      API.

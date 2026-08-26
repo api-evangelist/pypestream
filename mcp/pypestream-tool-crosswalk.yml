@@ -1,0 +1,149 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/*.json in this repo (100 operations across 6 contracts) reconciled against the probed MCP
+  endpoint https://developers.pypestream.com/mcp
+summary: >-
+  Pypestream ships both an MCP server and OpenAPI, but they do not meet. The MCP server is the
+  documentation server ReadMe provisions for the portal; the 100 published REST operations have no
+  MCP tool binding at all. The crosswalk is therefore almost entirely rest_only, and that is the
+  finding: an agent that connects to Pypestream's MCP endpoint can read Pypestream's docs but
+  cannot call a single Pypestream API through it.
+surfaces:
+  openapi:
+  - url: openapi/pypestream-reporting-api-openapi.json
+    gated: false
+    operations: 6
+  - url: openapi/pypestream-contact-center-api-openapi.json
+    gated: false
+    operations: 14
+  - url: openapi/pypestream-middleware-api-openapi.json
+    gated: false
+    operations: 12
+  - url: openapi/pypestream-engagement-api-openapi.json
+    gated: false
+    operations: 7
+  - url: openapi/pypestream-analytics-api-openapi.json
+    gated: false
+    operations: 43
+  - url: openapi/pypestream-javascript-sdk-openapi.json
+    gated: false
+    operations: 17
+    note: documentation-only pseudo-contract for a client-side SDK; not callable over HTTP
+  graphql: null
+  mcp:
+    url: https://developers.pypestream.com/mcp
+    gated: true
+    gate: 'JSON-RPC 401 -32001 Authorization required'
+crosswalk: []
+mcp_only:
+- tool: unknown
+  reason: >-
+    tools/list returns 401. No tool name is asserted, because guessing one would fabricate the very
+    thing this file exists to record.
+rest_only:
+- api: pypestream:reporting-api
+  operations:
+  - GET /single-agent/{agent_id}
+  - GET /multi-agent
+  - GET /single-chat/{chat_id}
+  - GET /multi-chat
+  - GET /single-chat-transcript/{chat_id}
+  - GET /multi-chat-transcript
+  note: >-
+    The Reporting API declares no operationId on any of its six operations, so these are listed by
+    method and path. That omission is itself a barrier to tool generation.
+- api: pypestream:contact-center-api
+  operations:
+  - sendEnd
+  - conversationHistory
+  - listIntegrations
+  - createIntegration
+  - deleteIntegration
+  - getIntegration
+  - patchIntegration
+  - updateIntegration
+  - sendMessage
+  - getMetadata
+  - updateMetadata
+  - sendTypingIndicator
+  - getSettings
+  - setSettings
+- api: pypestream:middleware-api
+  operations:
+  - sendEnd
+  - conversationHistory
+  - sendMessage
+  - sendTypingIndicator
+  - getSettings
+  - setSettings
+  - listIntegrations
+  - createIntegration
+  - deleteIntegration
+  - getIntegration
+  - patchIntegration
+  - updateIntegration
+  note: >-
+    Twelve of these fourteen operationIds are duplicates of the Contact Center API's, on the same
+    paths. The two contracts overlap; only the Contact Center document names a host.
+- api: pypestream:engagement-api
+  operations:
+  - anonymous_session
+  - start
+  - message
+  - ping
+  - type
+  - snapshot
+  - end
+- api: pypestream:analytics-api
+  operations:
+  - list
+  - retrieve
+  - actions_list
+  - actions_retrieve
+  - annotations_list
+  - annotations_retrieve
+  - batch_exports_list
+  - batch_exports_create
+  - batch_exports_retrieve
+  - batch_exports_update
+  - batch_exports_partial_update
+  - batch_exports_destroy
+  - batch_exports_backfill_create
+  - batch_exports_pause_create
+  - batch_exports_unpause_create
+  - batch_exports_runs_list
+  - batch_exports_runs_retrieve
+  - cohorts_list
+  - cohorts_retrieve
+  - cohorts_persons_retrieve
+  - dashboards_list
+  - dashboards_retrieve
+  - event_definitions_list
+  - event_definitions_retrieve
+  - events_list
+  - events_retrieve
+  - insights_list
+  - insights_retrieve
+  - insights_funnel_retrieve
+  - insights_path_retrieve
+  - insights_retention_retrieve
+  - insights_trend_retrieve
+  - kpis_list
+  - kpis_retrieve
+  - persons_list
+  - persons_retrieve
+  - property_definitions_retrieve
+  - property_definitions_retrieve_2
+  - organization_list
+  - organization_retrieve
+  - list_2
+  - retrieve_2
+coverage:
+  rest_operations_total: 100
+  rest_operations_callable: 83
+  rest_operations_documentation_only: 17
+  mcp_tools_total: null
+  mcp_tools_bound_to_rest: 0
+  rest_operations_with_a_tool: 0
+  bound_percent: 0

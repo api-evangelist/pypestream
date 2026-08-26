@@ -1,0 +1,27 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://www.pypestream.ai/sitemap.xml and https://www.pypestream.ai/pricing, probed 2026-08-26
+plan_count: 0
+published_pricing: false
+model: enterprise sales-gated
+detail: >-
+  Pypestream publishes no pricing page and no plan tiers. Its own sitemap.xml lists 47 URLs and
+  contains no /pricing entry; a direct request to https://www.pypestream.ai/pricing returns HTTP 200
+  but serves the identical 375,818-byte homepage shell with canonical https://www.pypestream.ai/,
+  i.e. a soft 404. The site's commercial calls to action are /demo and /roi, both request forms.
+  API access is gated the same way: the Reporting API overview states the service "is currently
+  available upon request on a Pype per Pype basis", and the authentication page routes key creation
+  through a Conversation Manager inside the Pypestream platform, with security and compliance
+  questions directed to "your Pypestream Success Manager".
+evidence:
+- url: https://www.pypestream.ai/pricing
+  status: 200
+  note: soft-404, homepage shell
+- url: https://www.pypestream.ai/sitemap.xml
+  status: 200
+  note: 47 URLs, no pricing page
+- url: https://developers.pypestream.com/reference/reporting-api-overview
+  status: 200
+  note: '"available upon request on a Pype per Pype basis"'
+plans: []

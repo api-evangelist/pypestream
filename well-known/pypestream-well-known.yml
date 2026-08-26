@@ -1,0 +1,131 @@
+generated: '2026-08-26'
+method: probed
+source: live GET of each /.well-known/ path on every Pypestream host named in apis.yml and in the openapi/ servers[] blocks, 2026-08-26
+note: >-
+  One path returned a 200 with a real document, and it is not Pypestream's.
+  analytics.pypestream.com/.well-known/security.txt serves PostHog's unmodified upstream
+  security.txt -- Contact mailto:engineering@posthog.com, Hiring https://posthog.com/careers,
+  Expires 2024-03-14, more than two years past. It corroborates that the Pypestream Analytics API
+  is a self-hosted PostHog deployment (Pypestream also maintains a PostHog fork at
+  github.com/pypestream/posthog, last pushed 2026-03-26), but it establishes no Pypestream
+  disclosure channel, so no SecurityTxt or Security pointer is emitted from it. Every other path on
+  every host is a miss. platform.pypestream.com and www.pypestream.ai answer 200 with an
+  application shell for every /.well-known/* path -- an SPA catch-all, recorded as a miss, not a
+  document.
+hosts:
+- host: developers.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  note: >-
+    The ReadMe-hosted portal advertises AI-discovery features in its own SSR payload
+    (api_catalog true, mcp_server_card true, agent_skills_index true, webmcp true), yet
+    /.well-known/api-catalog and every discovery path 404s. The one feature that is genuinely
+    reachable is the MCP endpoint at /mcp; see mcp/pypestream-mcp.yml.
+- host: analytics.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: well-known/pypestream-analytics-security.txt
+    belongs_to: posthog.com
+    expired: '2024-03-14'
+  - path: /.well-known/openid-configuration
+    status: 302
+  - path: /.well-known/oauth-authorization-server
+    status: 302
+  - path: /.well-known/api-catalog
+    status: 302
+  - path: /.well-known/ai-plugin.json
+    status: 302
+  - path: /.well-known/agent-card.json
+    status: 302
+  - path: /.well-known/agent.json
+    status: 302
+- host: www.pypestream.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+  - path: /.well-known/api-catalog
+    status: 200
+  - path: /.well-known/agent-card.json
+    status: 200
+  note: >-
+    Soft-404. Every path returns the identical 375,818-byte homepage document, canonical
+    https://www.pypestream.ai/. Treated as absent.
+- host: reporting.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: engagement-api.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: middleware.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: api.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/api-catalog
+    status: 401
+  - path: /.well-known/agent-card.json
+    status: 401
+  note: Host answers 401 to every anonymous request, including /.well-known/*.
+- host: platform.pypestream.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+  - path: /.well-known/api-catalog
+    status: 200
+  - path: /.well-known/agent-card.json
+    status: 200
+  note: >-
+    Soft-404. Identical 2,348-byte React application shell for every path. Treated as absent.

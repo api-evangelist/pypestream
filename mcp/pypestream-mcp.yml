@@ -1,0 +1,51 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://developers.pypestream.com/mcp probed 2026-08-26 (GET and JSON-RPC POST);
+  mcp_server_card feature flag read from the portal's own SSR payload at
+  https://developers.pypestream.com/reference/get_multi-agent
+name: Pypestream Documentation MCP Server
+status: published
+deployment:
+  mode: remote
+  endpoint: https://developers.pypestream.com/mcp
+  auth: unknown
+  verified: probed
+evidence:
+- probe: GET https://developers.pypestream.com/mcp
+  status: 200
+  body: 'This URL can only be accessed with a MCP client.'
+- probe: 'POST https://developers.pypestream.com/mcp {"jsonrpc":"2.0","id":1,"method":"initialize"}'
+  status: 401
+  body: '{"jsonrpc":"2.0","error":{"code":-32001,"message":"Authorization required"},"id":null}'
+- probe: 'POST https://developers.pypestream.com/mcp {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  status: 401
+  note: >-
+    No WWW-Authenticate header is returned and no OAuth metadata is served -- both
+    /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource 404 on this
+    host -- so an MCP client that follows RFC 9728 cannot discover how to authenticate. The auth
+    scheme is therefore recorded as unknown rather than oauth.
+tools:
+  status: gated
+  note: >-
+    tools/list is auth-gated, so the live tool schemas were not read and none are asserted here.
+    This is the MCP server ReadMe provisions for a documentation portal; its tools operate over
+    Pypestream's documentation corpus, not over the six Pypestream API surfaces. No Pypestream API
+    operation is known to be exposed as an MCP tool. See mcp/pypestream-tool-crosswalk.yml.
+llms_txt_fallback:
+  url: https://developers.pypestream.com/llms.txt
+  status: 200
+  note: >-
+    The documentation index the MCP server would serve is available anonymously at llms.txt and is
+    saved verbatim to llms/pypestream-llms.txt -- 1 guide and 66 API reference pages. Every
+    reference page additionally returns its full OpenAPI fragment when .md is appended to the URL,
+    which is how an unauthenticated agent can still read the contracts.
+related_surfaces:
+  markdown_negotiation: true
+  markdown_negotiation_note: >-
+    Appending .md to any developers.pypestream.com page returns the markdown source, confirmed on 12
+    pages. The portal's SSR payload also declares link_headers true and markdown_negotiation true.
+  agent_skills_index: false
+  agent_skills_index_note: >-
+    The portal declares agent_skills_index true, but /.well-known/agent-skills.json, /skills.txt,
+    /.well-known/skills.json, /agents.md and /AGENTS.md all 404.

@@ -1,0 +1,249 @@
+# generated: '2026-08-26'
+# method: generated
+# source: https://developers.pypestream.com/reference/engagement-api-websocket (+ .md), fetched 2026-08-26
+# note: |
+#   Pypestream publishes no AsyncAPI document. This file is GENERATED from Pypestream's own
+#   WebSocket reference page, which documents the transport (Phoenix Channels over WSS), both
+#   server URLs, the channel topic, all ten events with their direction, every payload field with
+#   type and required flag, and the close/status codes. Nothing here is invented; every channel,
+#   message and field is transcribed from that page. Payload types are as Pypestream states them.
+asyncapi: 3.0.0
+info:
+  title: Pypestream Engagement API WebSocket
+  version: '1'
+  description: >-
+    Bidirectional event stream backing the Pypestream Engagement API. The client creates an
+    anonymous user, opens a WebSocket, joins the chat channel `chat:{CHAT_ID}`, starts the
+    engagement over REST, and waits for `chat:ready` before sending messages. A request sent before
+    `chat:ready` is rejected with HTTP 428. A `new:ping` must be sent every 20 seconds or the
+    connection is dropped.
+  contact:
+    email: support@pypestream.com
+  externalDocs:
+    url: https://developers.pypestream.com/reference/engagement-api-websocket
+servers:
+  live:
+    host: engagement-api.pypestream.com
+    pathname: /socket/websocket
+    protocol: wss
+    description: Live
+  sandbox:
+    host: engagement-api-sandbox.pypestream.com
+    pathname: /socket/websocket
+    protocol: wss
+    description: Sandbox
+channels:
+  chat:
+    address: 'chat:{CHAT_ID}'
+    title: Chat channel
+    description: >-
+      Phoenix Channels topic joined with the access token returned by the Create User
+      (anonymous_session) request. Join before starting the engagement to avoid missing the
+      microapp's initial messages.
+    parameters:
+      CHAT_ID:
+        description: The engagement ID.
+    messages:
+      chatStart:
+        $ref: '#/components/messages/chatStart'
+      chatReady:
+        $ref: '#/components/messages/chatReady'
+      newPing:
+        $ref: '#/components/messages/newPing'
+      newPong:
+        $ref: '#/components/messages/newPong'
+      msgSend:
+        $ref: '#/components/messages/msgSend'
+      incomingMsg:
+        $ref: '#/components/messages/incomingMsg'
+      incomingNotice:
+        $ref: '#/components/messages/incomingNotice'
+      chatEnd:
+        $ref: '#/components/messages/chatEnd'
+      chatSnapshot:
+        $ref: '#/components/messages/chatSnapshot'
+      chatSnapshotResponse:
+        $ref: '#/components/messages/chatSnapshotResponse'
+operations:
+  sendChatStart:
+    action: send
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/chatStart'
+  receiveChatReady:
+    action: receive
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/chatReady'
+  sendPing:
+    action: send
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/newPing'
+  receivePong:
+    action: receive
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/newPong'
+  sendMessage:
+    action: send
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/msgSend'
+  receiveIncomingMessage:
+    action: receive
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/incomingMsg'
+  receiveIncomingNotice:
+    action: receive
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/incomingNotice'
+  sendChatEnd:
+    action: send
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/chatEnd'
+  sendChatSnapshot:
+    action: send
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/chatSnapshot'
+  receiveChatSnapshotResponse:
+    action: receive
+    channel:
+      $ref: '#/channels/chat'
+    messages:
+    - $ref: '#/channels/chat/messages/chatSnapshotResponse'
+components:
+  messages:
+    chatStart:
+      name: 'chat:start'
+      title: chat:start
+      summary: >-
+        Client. Starts the engagement. After sending this event the client must wait for chat:ready.
+      payload:
+        type: object
+        required: [app_id, consumer, gateway, pype_id, stream_id, user_id, version, access_token]
+        properties:
+          app_id:
+            type: string
+            description: The ID of the interface this engagement is associated with.
+          consumer:
+            type: string
+            description: The ID of the consumer interacting in this engagement.
+          gateway:
+            type: string
+            description: 'Gateway type. Possible value(s): pypestream_widget'
+          pype_id:
+            type: string
+            description: The ID of the internal Pypestream environment to which the microapp is deployed.
+          stream_id:
+            type: string
+            description: >-
+              The ID of the internal stream that the microapp is connected to within the Pypestream
+              environment. Multiple streams are allowed to live within one pype.
+          user_id:
+            type: string
+            description: The ID of the user interacting in this engagement.
+          version:
+            type: string
+            description: 'Internal message version. Possible value(s): 1'
+          access_token:
+            type: string
+            description: The access token received in the Create User response.
+    chatReady:
+      name: 'chat:ready'
+      title: chat:ready
+      summary: >-
+        Pypestream. Informs the client the chat is ready to receive send_message requests. A message
+        sent before this event is rejected with a 428 status.
+      payload:
+        type: object
+        required: [chat_ID]
+        properties:
+          chat_ID:
+            type: string
+            description: The engagement ID.
+    newPing:
+      name: 'new:ping'
+      title: new:ping
+      summary: >-
+        Client. Resets the connection timeout counter. Must be sent every 20 seconds to prevent
+        disconnection.
+      payload:
+        type: object
+        required: [seq, user_id, access_token]
+        properties:
+          seq:
+            type: number
+            description: The sequential identifier.
+          user_id:
+            type: string
+            description: ID of the user submitting the message.
+          access_token:
+            type: string
+            description: The access token received in the Create User response.
+    newPong:
+      name: 'new:pong'
+      title: new:pong
+      summary: Pypestream. Response to new:ping.
+      payload:
+        type: object
+        required: [seq, user_id]
+        properties:
+          seq:
+            type: number
+            description: The sequential identifier.
+          user_id:
+            type: string
+            description: ID of the user submitting the message.
+    msgSend:
+      name: 'msg:send'
+      title: msg:send
+      summary: Client. A message transmitted from the end-user to the microapp.
+    incomingMsg:
+      name: 'incoming:msg'
+      title: incoming:msg
+      summary: Pypestream. A message transmitted from the microapp to the end-user.
+    incomingNotice:
+      name: 'incoming:notice'
+      title: incoming:notice
+      summary: Pypestream. Enables a microapp to send a notice to the end-user of the chat.
+    chatEnd:
+      name: 'chat:end'
+      title: chat:end
+      summary: Client. Terminates the chat established between the end-user and the microapp.
+    chatSnapshot:
+      name: 'chat:snapshot'
+      title: chat:snapshot
+      summary: Client. A request for a snapshot of the engagement as it currently stands.
+    chatSnapshotResponse:
+      name: 'chat:snapshot_response'
+      title: chat:snapshot_response
+      summary: >-
+        Pypestream. An object with all the relevant information of the engagement at the moment the
+        request was made.
+  x-status-codes:
+  - code: HTTP 400
+    reason: Missing Parameter
+    description: 'A requested parameter is missing from the connection request (e.g. token or user_id).'
+  - code: HTTP 403
+    reason: Invalid Token
+    description: The access token is invalid.
+  - code: WebSocket 1007
+    reason: Invalid Message
+    description: The message is improperly formatted.
+  - code: WebSocket 1000
+    reason: Timeout
+    description: The WebSocket session has timed out.

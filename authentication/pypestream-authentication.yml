@@ -1,0 +1,41 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/pypestream-analytics-api-openapi.json, openapi/pypestream-contact-center-api-openapi.json,
+  openapi/pypestream-engagement-api-openapi.json, openapi/pypestream-javascript-sdk-openapi.json,
+  openapi/pypestream-middleware-api-openapi.json, openapi/pypestream-reporting-api-openapi.json
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: APIKey
+  type: http
+  scheme: bearer
+  sources:
+  - openapi/pypestream-analytics-api-openapi.json
+  - openapi/pypestream-engagement-api-openapi.json
+- name: BasicAuth
+  type: http
+  scheme: basic
+  sources:
+  - openapi/pypestream-contact-center-api-openapi.json
+  - openapi/pypestream-middleware-api-openapi.json
+  - openapi/pypestream-reporting-api-openapi.json
+- name: TokenHeader
+  type: apiKey
+  in: header
+  parameter: X-Pypestream-Token
+  sources:
+  - openapi/pypestream-contact-center-api-openapi.json
+  - openapi/pypestream-middleware-api-openapi.json
+- name: ApiKey
+  type: apiKey
+  in: header
+  parameter: X-API-Key
+  description: |-
+    API key for accessing Pypestream services (if applicable).
+    Note: The JavaScript SDK does not require API keys for client-side usage.
+  sources:
+  - openapi/pypestream-javascript-sdk-openapi.json

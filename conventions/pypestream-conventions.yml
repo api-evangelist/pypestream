@@ -1,0 +1,215 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/*.json in this repo, plus
+  https://developers.pypestream.com/reference/authentication,
+  https://developers.pypestream.com/reference/reporting-api-overview,
+  https://developers.pypestream.com/reference/engagement-api-websocket,
+  https://developers.pypestream.com/reference/contact-center-webhooks (read 2026-08-26)
+summary: >-
+  Pypestream publishes six contracts that share almost no cross-cutting semantics. Authentication,
+  error envelope, pagination and path versioning are each done differently depending on which API
+  you are calling, and none of it is written down in one place -- there is no conventions,
+  standards or API design guide on the developer portal.
+authentication:
+  consistent: false
+  styles:
+  - api: pypestream:reporting-api
+    scheme: HTTP Basic
+    credential: Client ID as username, Client Secret as password
+    issuance: >-
+      A Conversation Manager creates the key inside the Pypestream platform (Conversations > Admin >
+      Pypestream API > Create API Key).
+    docs: https://developers.pypestream.com/reference/authentication
+  - api: pypestream:contact-center-api
+    scheme: HTTP Basic or apiKey header
+    credential: BasicAuth, or X-Pypestream-Token header
+  - api: pypestream:middleware-api
+    scheme: HTTP Basic or apiKey header
+    credential: BasicAuth, or X-Pypestream-Token header
+  - api: pypestream:engagement-api
+    scheme: HTTP Bearer
+    credential: >-
+      Access token returned by the anonymous_session (Create User) call; the same token is passed as
+      a `token` connection parameter on the WebSocket.
+  - api: pypestream:analytics-api
+    scheme: HTTP Bearer
+    credential: >-
+      Personal access token created at https://analytics.pypestream.com/me/settings
+  oauth2: false
+  scopes: false
+  note: >-
+    No OAuth 2.0 anywhere, so there is no scope vocabulary and no delegated authorization. Reporting
+    and Contact Center use HTTP Basic over the wire. Pypestream's own guidance mitigates this
+    operationally rather than technically: issue a separate key per developer and never share keys.
+    Keys are long-lived; no rotation or expiry policy is published.
+  detail: authentication/pypestream-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key is documented or declared on any operation in any of the six contracts, and
+    there are unsafe writes that need one -- createIntegration (POST), batch_exports_create (POST),
+    batch_exports_backfill_create (POST), sendMessage (PUT), start and message on the Engagement
+    API. The Engagement API does define a 409 ExistingActiveConversation on chat start, which
+    prevents one specific duplicate, but that is a business-rule conflict, not a general
+    replay-safety mechanism. A retried POST after a timeout has no documented protection.
+pagination:
+  consistent: false
+  styles:
+  - api: pypestream:analytics-api
+    style: limit/offset envelope
+    params: [limit, offset]
+    response_fields: [count, next, previous, results]
+    note: >-
+      Django REST Framework style. `next` and `previous` are absolute URIs. Applies to every
+      Paginated*List schema (actions, annotations, batch exports, cohorts, dashboards, event
+      definitions, events, insights, KPIs, organizations, persons, projects).
+  - api: pypestream:reporting-api
+    style: time-window, unpaginated
+    params: [from, to]
+    note: >-
+      No cursor and no page size. Volume is bounded by a maximum window instead -- 24 hours for
+      multi-agent, one hour for multi-chat and multi-chat-transcript -- and exceeding it returns
+      HTTP 403 "Requested date range is greater than the maximum". A caller with more data than the
+      window allows must walk the clock itself.
+  - api: pypestream:contact-center-api
+    style: none
+    note: listIntegrations and conversationHistory return unbounded collections.
+filtering:
+  api: pypestream:analytics-api
+  params: [after, before, distinct_id, event, person_id, properties, select, where, format, maskPii]
+  note: >-
+    `select` and `where` accept JSON-serialized arrays of PypeQL expressions and are marked
+    (Experimental) in the spec. `maskPii` masks personally identifiable information in the response
+    and is off by default.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: true
+  note: >-
+    The Contact Center API carries a first-class conversation metadata resource -- getMetadata (GET)
+    and updateMetadata (PATCH) on /contactCenter/v1/conversations/{conversationId}/metadata -- used
+    to pass end-user context to an agent on escalation.
+request_id_tracing:
+  supported: false
+  note: >-
+    No request-id or correlation-id header is documented on any API. The nearest thing is
+    domain-level: conversationId and chat_id thread a conversation across REST, WebSocket and
+    webhook, and `seq` sequences WebSocket pings. None of these identify an individual HTTP request
+    for support triage.
+versioning:
+  style: path segment, per API
+  detail: lifecycle/pypestream-lifecycle.yml
+error_envelope:
+  consistent: false
+  rfc9457: false
+  shapes:
+  - apis: [pypestream:engagement-api, pypestream:contact-center-api, pypestream:middleware-api]
+    media_type: application/json
+    shape: '{ message: string, errors: [ { source: string, type: string, message: string } ] }'
+    note: >-
+      A consistent envelope across these three, with a top-level human message and a machine-ish
+      per-field errors array. InternalError (500) drops the errors array and carries `message` only.
+  - apis: [pypestream:reporting-api]
+    media_type: none
+    shape: null
+    note: >-
+      The Reporting API declares 400, 401, 403 and 409 responses with a description string and NO
+      response schema and NO content type at all. A client is told an error occurred and given no
+      documented body to parse.
+  - apis: [pypestream:analytics-api]
+    media_type: null
+    shape: null
+    note: >-
+      The Analytics API declares no 4xx or 5xx response on any of its 43 operations. Every
+      documented outcome is a success.
+  detail: errors/pypestream-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  detail: rate-limits/pypestream-rate-limits.yml
+  note: Limits are published as prose only; no runtime header, no documented 429.
+dry_run_mode:
+  supported: false
+  note: >-
+    No preview, validate-only or dry-run parameter on any write operation. The nearest published
+    rehearsal surface is the separate sandbox estate (sandbox/pypestream-sandbox.yml), which
+    requires its own credentials and is not a per-call mode.
+reversibility:
+  grade: documented
+  has_write_surface: true
+  note: >-
+    Pypestream ships reversal paths on three of its four write surfaces, and states a window for
+    none of them. Every entry below is graded `documented` rather than `verified` for exactly that
+    reason. No published page states how long any of these actions can be taken back, so no window
+    is asserted here.
+  surfaces:
+  - api: pypestream:analytics-api
+    write_operation: batch_exports_create
+    reversal: batch_exports_destroy
+    reversal_operation_id: batch_exports_destroy
+    reversal_kind: delete
+    grade: documented
+    window: null
+    note: >-
+      "Permanently deletes a batch export configuration. This action stops all future runs and
+      removes the export setup from the project." Permanent and immediate; the docs state no undo
+      and no grace period.
+  - api: pypestream:analytics-api
+    write_operation: batch_exports_create
+    reversal: batch_exports_pause_create
+    reversal_operation_id: batch_exports_pause_create
+    reversal_kind: pause
+    restore_operation_id: batch_exports_unpause_create
+    grade: documented
+    window: null
+    note: >-
+      The strongest reversal Pypestream ships. Pausing stops future runs while "the configuration
+      remains saved", and unpause "resumes a paused batch export" on the configured interval. It is
+      fully symmetric and losslessly undoable. No time limit is stated on how long an export may
+      stay paused before it is reaped.
+  - api: pypestream:analytics-api
+    write_operation: batch_exports_pause_create
+    reversal: batch_exports_backfill_create
+    reversal_kind: replay
+    grade: documented
+    window: null
+    note: >-
+      Backfill "manually triggers a backfill job for a specific historical date range... data that
+      was collected before the batch export was originally created or during a period where the
+      export was paused". This is the compensating action that repairs a gap. The docs state no
+      maximum lookback, so an agent cannot know how far back a gap is still recoverable.
+  - api: pypestream:contact-center-api
+    write_operation: createIntegration
+    reversal: deleteIntegration
+    reversal_operation_id: deleteIntegration
+    reversal_kind: delete
+    grade: documented
+    window: null
+  - api: pypestream:engagement-api
+    write_operation: start
+    reversal: end
+    reversal_operation_id: end
+    reversal_kind: terminate
+    grade: documented
+    window: null
+    note: >-
+      `end` terminates an engagement but does not undo it -- the conversation and its transcript
+      persist and remain readable through the Reporting API for 30 days. Ending is a forward action,
+      not a reversal, and is recorded here only because it is the sole lifecycle control on the
+      surface.
+  irreversible:
+  - api: pypestream:engagement-api
+    operation: message
+    note: >-
+      A message sent to an end user cannot be recalled, edited or deleted. No unsend, no redaction
+      and no correction operation exists on any Pypestream contract. For an autonomous agent driving
+      a customer conversation this is the single most consequential unreversible write Pypestream
+      exposes, and it is undocumented as such.
+  - api: pypestream:contact-center-api
+    operation: sendMessage
+    note: Same as above on the agent side; no recall path.
+  - api: pypestream:reporting-api
+    note: Read-only surface; reversibility is na for all six operations.

@@ -1,0 +1,32 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Pypestream Engagement API
+  version: 1.0.0
+extends: openapi/pypestream-engagement-api-openapi.json
+x-generated: '2026-08-26'
+x-method: generated
+x-source: API Evangelist enrichment pass over Pypestream published docs and probes, 2026-08-26. Records
+  facts stated on developers.pypestream.com or observed by probe that the OpenAPI itself omits. Never
+  mutates the original.
+actions:
+- target: $.info
+  description: Attach enrichment provenance.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/pypestream
+      artifacts: https://github.com/api-evangelist/pypestream
+      enriched: '2026-08-26'
+- target: $.info
+  description: Link the WebSocket event surface, without which this REST contract cannot be used.
+  update:
+    x-asyncapi: asyncapi/pypestream-engagement-api-asyncapi.yml
+    x-websocket-live: wss://engagement-api.pypestream.com/socket/websocket
+    x-websocket-sandbox: wss://engagement-api-sandbox.pypestream.com/socket/websocket
+    x-websocket-protocol: Phoenix Channels
+    x-websocket-keepalive: new:ping every 20 seconds
+    x-docs: https://developers.pypestream.com/reference/engagement-api-websocket
+- target: $.paths['/messaging/v1/chats/{chat_id}/message'].post
+  description: State the ordering precondition that produces the documented 428.
+  update:
+    x-precondition: The client must receive the chat:ready WebSocket event before calling this operation.
+      A message sent earlier is rejected with HTTP 428.

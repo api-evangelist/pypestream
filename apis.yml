@@ -1,23 +1,238 @@
 aid: pypestream
 name: Pypestream
-description: 'Pypestream is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Pypestream is a New York based enterprise conversational and agentic AI company, founded in 2015,
+  whose platform deploys voice and chat AI agents ("Pypes" and microapps) into Fortune 500 contact
+  centers across insurance, health insurance, telecom and travel. Pypestream publishes a self-serve
+  developer portal at developers.pypestream.com carrying six distinct OpenAPI-described surfaces --
+  a Reporting API for conversation and agent data, a Contact Center API and Middleware API for live
+  agent escalation, an Engagement API with a Phoenix Channels WebSocket event stream for embedding
+  chat in any channel, an Analytics API for product analytics and warehouse batch exports, and an
+  OpenAPI-documented client-side JavaScript SDK for embedding the chat widget.
+image: https://www.pypestream.ai/pypestream-logo-black.webp
 url: https://raw.githubusercontent.com/api-evangelist/pypestream/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
-apis: []
+- Conversational AI
+- Agentic AI
+- Contact Center
+- Customer Service
+- Customer Engagement
+- Chatbots
+- Voice AI
+- Messaging
+- Analytics
+- Enterprise Software
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: pypestream:reporting-api
+  name: Pypestream Reporting API
+  description: >-
+    Programmatic access to Pypestream automation, conversation and agent data. Retrieves single and
+    multiple agent records, session metadata and conversation transcripts over a bounded time window.
+    Available on request on a Pype-by-Pype basis; data is retained for 30 days.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Reporting
+  - Analytics
+  - Conversations
+  - Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-reporting-api-openapi.json
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Overlay
+    url: overlays/pypestream-reporting-api-overlay.yaml
+- aid: pypestream:contact-center-api
+  name: Pypestream Contact Center API
+  description: >-
+    Builds integrations between Pypestream and a contact center. Escalates conversations from a Pype
+    or a messaging channel to a live agent, checks agent availability and wait time, exchanges
+    messages and typing indicators, and manages contact-center integration settings.
+  humanURL: https://developers.pypestream.com/reference/contact-center-api-overview
+  baseURL: https://middleware.pypestream.com/
+  tags:
+  - Contact Center
+  - Escalation
+  - Messaging
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-contact-center-api-openapi.json
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Overlay
+    url: overlays/pypestream-contact-center-api-overlay.yaml
+- aid: pypestream:middleware-api
+  name: Pypestream Middleware API
+  description: >-
+    The middleware layer behind the Contact Center API, exposing Settings, Integrations and
+    Conversations operations. The published contract declares an empty servers[] block; the sibling
+    Contact Center API contract names middleware.pypestream.com as the host for the same operations.
+  humanURL: https://developers.pypestream.com/reference/contact-center-api-overview
+  baseURL: https://middleware.pypestream.com/
+  tags:
+  - Middleware
+  - Contact Center
+  - Integrations
+  - Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-middleware-api-openapi.json
+  - type: Overlay
+    url: overlays/pypestream-middleware-api-overlay.yaml
+- aid: pypestream:engagement-api
+  name: Pypestream Engagement API
+  description: >-
+    Lets developers build interfaces and connect messaging channels so end users can engage a
+    Pypestream microapp. Creates an anonymous user session, starts and ends an engagement and sends
+    messages, paired with a Phoenix Channels WebSocket for the event stream.
+  humanURL: https://developers.pypestream.com/reference/engagement-overview
+  baseURL: https://engagement-api.pypestream.com/
+  tags:
+  - Engagement
+  - Messaging
+  - WebSocket
+  - Chat
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-engagement-api-openapi.json
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Overlay
+    url: overlays/pypestream-engagement-api-overlay.yaml
+- aid: pypestream:analytics-api
+  name: Pypestream Analytics API
+  description: >-
+    Product analytics over Pypestream datasets -- events, persons, cohorts, actions, annotations,
+    dashboards, insights (trend, funnel, retention, path), KPIs and property definitions -- plus
+    batch exports to S3 and Snowflake with backfill, pause and unpause control.
+  humanURL: https://developers.pypestream.com/reference/overview-2
+  baseURL: https://analytics.pypestream.com/
+  tags:
+  - Analytics
+  - Events
+  - Insights
+  - Data Export
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-analytics-api-openapi.json
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Overlay
+    url: overlays/pypestream-analytics-api-overlay.yaml
+- aid: pypestream:javascript-sdk
+  name: Pypestream JavaScript SDK API
+  description: >-
+    The client-side JavaScript SDK for embedding the Pypestream conversational AI chat interface in
+    a web page, in window or inline mode. Pypestream documents the SDK's methods, configuration and
+    event handlers as an OpenAPI document; the spec states it is documentation only and not a
+    callable REST API, and its server entry is labelled "Documentation Only".
+  humanURL: https://developers.pypestream.com/reference/documentation
+  tags:
+  - SDK
+  - JavaScript
+  - Web Components
+  - Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-javascript-sdk-openapi.json
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:insights-api
+  name: Pypestream Insights API
+  description: >-
+    A single-operation contract for aggregate dashboard report data. Published in Pypestream's own
+    API registry, but every servers[] entry points at an unbranded Vercel preview deployment
+    (analytics-eight-eta.vercel.app) or at localhost, so no production host is stated and no
+    baseURL is recorded here.
+  humanURL: https://developers.pypestream.com/reference/overview
+  tags:
+  - Insights
+  - Reporting
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-insights-api-openapi.json
 common:
 - type: Website
-  url: https://forgeglobal.com/pypestream_stock/
+  url: https://www.pypestream.ai/
+- type: DeveloperPortal
+  url: https://developers.pypestream.com/
+- type: Documentation
+  url: https://developers.pypestream.com/docs/welcome
+- type: APIReference
+  url: https://developers.pypestream.com/reference/overview
+- type: GettingStarted
+  url: https://developers.pypestream.com/reference/overview
+- type: Authentication
+  url: authentication/pypestream-authentication.yml
+- type: Support
+  url: https://support.pypestream.com/
+- type: Blog
+  url: https://www.pypestream.ai/resources
+- type: GitHubOrganization
+  url: https://github.com/pypestream
+- type: StatusPage
+  url: https://status.pypestream.com/
+- type: PrivacyPolicy
+  url: https://www.pypestream.ai/privacy
+- type: SignUp
+  url: https://platform.pypestream.com/
+- type: LLMsTxt
+  url: llms/pypestream-llms.txt
+- type: MCPServer
+  url: mcp/pypestream-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/pypestream-tool-crosswalk.yml
+- type: Packages
+  url: packages/pypestream-packages.yml
+- type: SDKs
+  url: packages/pypestream-packages.yml
+- type: Components
+  url: components/pypestream-components.yml
+- type: WellKnown
+  url: well-known/pypestream-well-known.yml
+- type: Conformance
+  url: conformance/pypestream-conformance.yml
+- type: Compliance
+  url: security/pypestream-trust-center.yml
+- type: TrustCenter
+  url: security/pypestream-trust-center.yml
+- type: DomainSecurity
+  url: security/pypestream-domain-security.yml
+- type: ErrorCatalog
+  url: errors/pypestream-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/pypestream-lifecycle.yml
+- type: Conventions
+  url: conventions/pypestream-conventions.yml
+- type: Sandbox
+  url: sandbox/pypestream-sandbox.yml
+- type: DataModel
+  url: data-model/pypestream-data-model.yml
+- type: RateLimits
+  url: rate-limits/pypestream-rate-limits.yml
+- type: Plans
+  url: plans/pypestream-plans-pricing.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 38
+  pass: local-v1

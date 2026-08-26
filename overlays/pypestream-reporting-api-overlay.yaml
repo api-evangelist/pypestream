@@ -1,0 +1,37 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Pypestream Reporting API
+  version: 1.0.0
+extends: openapi/pypestream-reporting-api-openapi.json
+x-generated: '2026-08-26'
+x-method: generated
+x-source: API Evangelist enrichment pass over Pypestream published docs and probes, 2026-08-26. Records
+  facts stated on developers.pypestream.com or observed by probe that the OpenAPI itself omits. Never
+  mutates the original.
+actions:
+- target: $.info
+  description: Attach enrichment provenance.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/pypestream
+      artifacts: https://github.com/api-evangelist/pypestream
+      enriched: '2026-08-26'
+- target: $.info
+  description: Record the published rate limit and retention window, which live only in the docs overview.
+  update:
+    x-rate-limit: 400 requests/hour, 5 concurrent requests
+    x-data-retention: 30 days
+    x-availability: Available upon request on a Pype per Pype basis
+    x-transport-requirement: HTTPS required
+    x-docs: https://developers.pypestream.com/reference/reporting-api-overview
+- target: $.info
+  description: Flag that no operation in this contract declares an operationId, which blocks client and
+    tool generation.
+  update:
+    x-api-evangelist-defect: No operationId is declared on any of the six operations.
+- target: $.info
+  description: Record the authentication issuance path, which is documented only on the auth page.
+  update:
+    x-auth-issuance: 'A Conversation Manager creates a Client ID and Client Secret in the Pypestream platform:
+      Conversations > Admin > Pypestream API > Create API Key.'
+    x-auth-docs: https://developers.pypestream.com/reference/authentication

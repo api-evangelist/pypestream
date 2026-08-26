@@ -1,0 +1,144 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  4xx/5xx responses declared in openapi/*.json, enriched from
+  https://developers.pypestream.com/reference/engagement-api-websocket and the per-operation
+  descriptions on developers.pypestream.com (read 2026-08-26)
+format: proprietary
+rfc9457: false
+rfc7807: false
+note: >-
+  No Pypestream contract uses application/problem+json and none declares a `type` URI, an error
+  code enumeration or a documented error reference page. Three of the six contracts share one JSON
+  envelope; one declares errors with no body at all; one declares no errors at all.
+envelopes:
+- id: pypestream-error-envelope
+  media_type: application/json
+  used_by:
+  - pypestream:engagement-api
+  - pypestream:contact-center-api
+  - pypestream:middleware-api
+  schema:
+    message:
+      type: string
+      required: true
+      description: Human-readable summary of the failure.
+    errors:
+      type: array
+      required: true
+      items:
+        source:
+          type: string
+          required: true
+          description: The field or input that caused the error.
+        type:
+          type: string
+          required: true
+          description: The error type. No enumeration of permitted values is published.
+        message:
+          type: string
+          required: true
+  note: >-
+    `type` is the closest thing to a machine-readable error code Pypestream ships, and its permitted
+    values are nowhere documented. A client cannot branch on it without observing production traffic.
+- id: internal-error-envelope
+  media_type: application/json
+  used_by:
+  - pypestream:engagement-api
+  - pypestream:contact-center-api
+  - pypestream:middleware-api
+  applies_to: '500'
+  schema:
+    message:
+      type: string
+      required: true
+  note: The errors array is dropped on 500; only a message is returned.
+- id: no-envelope
+  media_type: null
+  used_by:
+  - pypestream:reporting-api
+  note: >-
+    All 18 declared error responses across the Reporting API's six operations carry a description
+    string and no content, no schema and no media type.
+problem_types:
+- status: 400
+  title: Bad Request
+  schema: BadRequest
+  apis: [pypestream:engagement-api, pypestream:contact-center-api, pypestream:middleware-api, pypestream:javascript-sdk]
+  occurrences: 24
+  remediation: Correct the malformed or missing input identified by errors[].source.
+- status: 400
+  title: Incomplete or invalid input, or from/to incorrectly formatted
+  apis: [pypestream:reporting-api]
+  occurrences: 6
+  remediation: >-
+    Supply both `from` and `to` as RFC3339 timestamps (YYYY-MM-DDTHH:MM:SSZ).
+- status: 401
+  title: Unauthorized
+  apis: [pypestream:reporting-api]
+  occurrences: 6
+  remediation: >-
+    Send the Client ID and Client Secret as HTTP Basic credentials. Keys are created by a
+    Conversation Manager in the Pypestream platform.
+- status: 403
+  title: Requested date range is greater than the maximum
+  apis: [pypestream:reporting-api]
+  occurrences: 2
+  remediation: >-
+    Narrow the window. multi-agent accepts 24 hours; multi-chat and multi-chat-transcript accept no
+    more than one hour.
+- status: 403
+  title: Invalid Token
+  apis: [pypestream:engagement-api]
+  surface: websocket
+  remediation: Re-issue an access token via the Create User (anonymous_session) call.
+- status: 404
+  title: Not Found
+  schema: NotFound
+  apis: [pypestream:engagement-api]
+  occurrences: 7
+  remediation: Verify chat_id; the engagement may have ended or never existed.
+- status: 409
+  title: Existing Active Conversation
+  schema: ExistingActiveConversation
+  apis: [pypestream:engagement-api]
+  occurrences: 1
+  remediation: >-
+    An engagement is already active for this consumer. End it before starting another, or resume it.
+- status: 409
+  title: Conflict
+  apis: [pypestream:reporting-api]
+  occurrences: 4
+- status: 428
+  title: Precondition Required
+  schema: PreconditionRequired
+  apis: [pypestream:engagement-api]
+  occurrences: 1
+  remediation: >-
+    Wait for the `chat:ready` WebSocket event before sending a message. This is the single most
+    likely first-integration failure on the Engagement API and it is documented in the WebSocket
+    reference, not on the REST operation.
+- status: 500
+  title: Internal Server Error
+  schema: InternalError
+  apis: [pypestream:engagement-api, pypestream:contact-center-api, pypestream:middleware-api]
+  occurrences: 29
+websocket_close_codes:
+- code: 1000
+  reason: Timeout
+  description: The WebSocket session has timed out.
+  remediation: Send a new:ping every 20 seconds to keep the connection alive.
+- code: 1007
+  reason: Invalid Message
+  description: The message is improperly formatted.
+gaps:
+- api: pypestream:analytics-api
+  detail: >-
+    43 operations, zero declared 4xx or 5xx responses. The largest Pypestream contract documents no
+    failure mode whatsoever -- not 401 on a bad token, not 404 on a missing dataset, not 400 on a
+    malformed PypeQL `where` expression. A generated client has nothing to handle.
+- scope: all
+  detail: >-
+    No 429 is declared anywhere, despite a published 400 requests/hour limit on the Reporting API.
+- scope: all
+  detail: No dedicated error-reference page exists on the developer portal.

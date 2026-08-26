@@ -1,0 +1,62 @@
+generated: '2026-08-26'
+method: searched
+source: https://developers.pypestream.com/reference/reporting-api-overview (+ .md), fetched 2026-08-26
+limit_count: 2
+limits:
+- api: pypestream:reporting-api
+  scope: per-user
+  window: 1h
+  limit: 400
+  unit: requests
+  statement: '400 requests/hour'
+  source: https://developers.pypestream.com/reference/reporting-api-overview
+- api: pypestream:reporting-api
+  scope: per-user
+  window: concurrent
+  limit: 5
+  unit: concurrent requests
+  statement: '5 concurrent requests'
+  source: https://developers.pypestream.com/reference/reporting-api-overview
+exhaustion_behavior:
+  documented: true
+  behavior: >-
+    Quoted from the docs: "If these limits are reached, then additional requests for this user will
+    be ignored until the proper time period has elapsed."
+  status_code: null
+  status_code_note: >-
+    The docs say requests are "ignored" and name no status code. The Reporting API OpenAPI declares
+    400, 401, 403 and 409 responses across its six operations and declares no 429 anywhere, so an
+    agent has no documented signal that it has been throttled as opposed to rejected.
+response_headers:
+  documented: []
+  observed: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented for any Pypestream API, and
+    none was returned on an unauthenticated probe of
+    https://reporting.pypestream.com/api/v2/multi-agent (HTTP 400, 2026-08-26). The published limit
+    is a number in prose with no runtime counterpart, so a client cannot discover its remaining
+    budget without counting its own calls.
+undocumented_surfaces:
+- api: pypestream:contact-center-api
+  note: No published rate limit.
+- api: pypestream:middleware-api
+  note: No published rate limit.
+- api: pypestream:engagement-api
+  note: >-
+    No published request rate limit. The WebSocket surface does state a keepalive cadence -- a
+    new:ping every 20 seconds or the connection is dropped -- which is a liveness requirement, not
+    a throttle.
+- api: pypestream:analytics-api
+  note: No published rate limit.
+other_published_quotas:
+- api: pypestream:reporting-api
+  quota: Data is available for a period of 30 days.
+  note: >-
+    A retention window, not a rate limit. The multi-agent operation documents that "if a request is
+    for data over 30 days old, the response will be an empty array" -- a silent empty result rather
+    than an error.
+- api: pypestream:reporting-api
+  quota: Requested date range is greater than the maximum (HTTP 403).
+  note: >-
+    multi-chat and multi-chat-transcript are documented as accepting a window "no more than one
+    hour apart"; multi-agent accepts a 24-hour frame.

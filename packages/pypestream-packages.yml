@@ -1,0 +1,71 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  registry.npmjs.org search + package metadata (2026-08-26), pypi.org/pypi lookups,
+  https://developers.pypestream.com/reference/documentation (JavaScript SDK loader),
+  https://github.com/pypestream
+note: >-
+  Pypestream publishes no first-party REST client SDK on any package registry. The only
+  Pypestream-published npm package is a rebranded fork of posthog-js that backs the Analytics API,
+  and the flagship JavaScript chat SDK is not distributed through a registry at all -- it is loaded
+  from a per-customer domain via a script tag, so a consumer cannot pin or verify a version.
+registries_checked:
+- npm
+- PyPI
+- RubyGems
+- crates.io
+- NuGet
+- Maven Central
+- pkg.go.dev
+packages:
+- name: pypestream-analytics-js
+  registry: npm
+  url: https://www.npmjs.com/package/pypestream-analytics-js
+  official: true
+  official_basis: >-
+    Published under the unscoped pypestream-* name, repository field points at
+    github.com/pypestream/analytics-js, an org Pypestream controls.
+  language: JavaScript
+  version: 1.69.3
+  published: '2025-03-27'
+  license: MIT
+  repository: https://github.com/pypestream/analytics-js
+  description: >-
+    Client library that automatically captures usage and sends events to Pypestream Analytics. A
+    rebranded fork of posthog-js; it is the client counterpart to the Analytics API on
+    analytics.pypestream.com.
+  covers_api: pypestream:analytics-api
+  release_count: 4
+  note: >-
+    Latest release 1.69.3 (2025-03-27) predates the Analytics API contract it pairs with, which
+    Pypestream last updated 2026-01-29 in its own API registry -- an eleven month gap between the
+    client and the API surface.
+- name: Pypestream JavaScript SDK
+  registry: cdn
+  official: true
+  official_basis: >-
+    Documented by Pypestream as its own SDK and described by a Pypestream-published OpenAPI
+    document (openapi/pypestream-javascript-sdk-openapi.json), info.contact
+    https://support.pypestream.com.
+  language: JavaScript
+  version: null
+  published: null
+  distribution: '<script src="https://your-pypestream-domain/config.js"></script>'
+  covers_api: pypestream:javascript-sdk
+  note: >-
+    version/published are null because there is nothing to read. The loader is documented as a
+    script tag against a per-customer Pypestream domain with no version segment in the path and no
+    registry entry, so the distribution is unpinned and floats to whatever the tenant is currently
+    serving. A consumer cannot tell which build they receive; neither can we. The SDK's own OpenAPI
+    declares info.version 3.0.0, but that versions the document, not the shipped script.
+absent:
+- registry: PyPI
+  queried:
+  - pypestream
+  - pypestream-sdk
+  status: 404
+- registry: npm
+  note: >-
+    npm search for "pypestream" also returns pypestream-locales-test (1.0.3, 2024-09-16) and
+    @nsammour-pypestream/sdk-test (0.1.0, 2021-10-07). Both are named as tests, neither is
+    documented by Pypestream, and both are recorded here as not-official rather than counted as SDKs.

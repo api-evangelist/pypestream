@@ -1,0 +1,25 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Pypestream Middleware API
+  version: 1.0.0
+extends: openapi/pypestream-middleware-api-openapi.json
+x-generated: '2026-08-26'
+x-method: generated
+x-source: API Evangelist enrichment pass over Pypestream published docs and probes, 2026-08-26. Records
+  facts stated on developers.pypestream.com or observed by probe that the OpenAPI itself omits. Never
+  mutates the original.
+actions:
+- target: $.info
+  description: Attach enrichment provenance.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/pypestream
+      artifacts: https://github.com/api-evangelist/pypestream
+      enriched: '2026-08-26'
+- target: $.info
+  description: Supply the host this contract omits and record its overlap with the Contact Center API.
+  update:
+    x-api-evangelist-note: servers[] is empty in the published document. The sibling Contact Center API
+      contract names middleware.pypestream.com and middleware-sandbox.pypestream.com for these same paths.
+    x-supersedes: Twelve of these operationIds are duplicated in openapi/pypestream-contact-center-api-openapi.json,
+      which moves conversationHistory from /contactCenter/v1/ to /contactCenter/v2/.

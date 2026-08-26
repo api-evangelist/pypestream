@@ -1,0 +1,43 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://trust.pypestream.com/ (HTTP 200, probed 2026-08-26), https://www.pypestream.ai/security,
+  and the SSR meta of https://www.pypestream.ai/
+trust_center:
+  url: https://trust.pypestream.com/
+  http_status: 200
+  vendor: Vanta
+  vendor_evidence: >-
+    Page title "Pypestream Trust Center"; the document loads only assets.vanta.com bundles
+    (index-trust-report-*.js, alpaca-*.js) and links a Vanta-hosted document at
+    app.vanta.com/doc?s=mfierwpbr76esz2ac3kgcg.
+  machine_readable: false
+  machine_readable_note: >-
+    The trust center is a client-rendered Vanta application. The HTML delivered to a non-JS client
+    is a 5.8KB shell containing the page title and nothing else -- no certification list, no
+    document index, no framework names. https://api.vanta.com/v1/trust-pages/pypestream returns 401.
+    The certifications Pypestream holds are therefore unreadable by any agent that does not execute
+    JavaScript, which is the finding: the trust center exists and is not machine-readable.
+certifications:
+  read_from_source: false
+  claims:
+  - name: SOC 2
+    status: claimed
+    evidence: >-
+      "SOC 2 certified." appears in the meta name="description", og:description and
+      twitter:description of every document served by www.pypestream.ai. This is Pypestream's own
+      first-party assertion in its own markup.
+    source: https://www.pypestream.ai/
+    verified_against_report: false
+  note: >-
+    Only SOC 2 could be read first-party. The /security page is documented in Pypestream's own
+    sitemap.xml but the site is a single-page application that returns the identical 375,818-byte
+    homepage document, canonical https://www.pypestream.ai/, for every route -- so its content was
+    not machine-readable and no further certification is asserted here. Any additional framework
+    Pypestream holds is real but unrecorded, not absent; a JS-capable read of
+    https://trust.pypestream.com/ would resolve it.
+security_page:
+  url: https://www.pypestream.ai/security
+  http_status: 200
+  readable: false
+  note: SPA route; serves the homepage shell to a non-JS client.

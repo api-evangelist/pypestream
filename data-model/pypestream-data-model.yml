@@ -1,0 +1,249 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  $ref graphs and id-reference fields in openapi/*.json, plus the entity definitions Pypestream
+  writes into its own operation descriptions (read via
+  https://developers.pypestream.com/llms.txt and the .md reference pages, 2026-08-26)
+note: >-
+  Pypestream's published surface holds two largely disconnected object graphs. The conversational
+  graph (Pype > Stream > Chat > Message, with Agent and Integration alongside) is spread across the
+  Engagement, Contact Center and Reporting contracts and is joined only by shared identifiers --
+  there is no $ref between those three documents. The analytics graph (Organization > Project >
+  Dataset > Event/Person/...) is self-contained in the Analytics contract. Nothing links a Chat to
+  an Event, so an agent cannot traverse from a conversation to its analytics record using published
+  fields alone.
+graphs:
+- name: conversational
+  apis: [pypestream:engagement-api, pypestream:contact-center-api, pypestream:middleware-api, pypestream:reporting-api]
+  entities:
+  - name: Pype
+    description: >-
+      The internal Pypestream environment a microapp is deployed to. Named by pype_id on chat:start
+      and used as the unit of API entitlement -- the Reporting API is "available upon request on a
+      Pype per Pype basis".
+    id_field: pype_id
+    schema_published: false
+    note: Referenced by ID only; no contract defines a Pype resource or exposes CRUD for it.
+  - name: Stream
+    description: >-
+      An internal stream a microapp is connected to within a Pype. Multiple streams may live within
+      one Pype.
+    id_field: stream_id
+    schema_published: false
+  - name: Consumer
+    description: The end user interacting in an engagement.
+    id_field: consumer
+    schema_published: false
+  - name: User
+    description: >-
+      The anonymous session identity created before a WebSocket connection. Carries the access token
+      used for both REST and WebSocket auth.
+    id_field: user_id
+    schema: AnonymousSessionResponse
+    api: pypestream:engagement-api
+    operations: [anonymous_session]
+  - name: Chat
+    aka: [Engagement, Conversation, Session]
+    description: >-
+      One conversation between a consumer and a microapp, optionally escalated to a live agent. The
+      same object is called a chat on the Engagement API (chat_id), a conversation on the Contact
+      Center API (conversationId) and a session on the Reporting API (Chat/Session ID).
+    id_field: chat_id
+    schema: StartChat, Snapshot, SnapshotResponse, MetadataObject
+    operations: [start, end, snapshot, sendEnd, conversationHistory]
+  - name: Message
+    description: A single utterance, from consumer to microapp or from agent to consumer.
+    id_field: messageId
+    schema: SendMessage, Message, MessageSent, HistoryMessage
+    operations: [message, sendMessage, conversationHistory]
+  - name: Transcript
+    description: The full message history of a chat, retrievable for 30 days.
+    schema: TranscriptObject, MultiTranscriptObject, History, HistoryV2
+    api: pypestream:reporting-api
+  - name: Agent
+    description: A human contact-center agent, with status transitions and assigned chat counts.
+    id_field: agent_id
+    schema: AgentObject, MultiAgentObject, AgentMetadata
+    api: pypestream:reporting-api
+  - name: Metadata
+    description: Conversation-scoped context passed to an agent on escalation.
+    schema: Metadata
+    api: pypestream:contact-center-api
+  - name: Integration
+    description: A configured connection between Pypestream and an external contact center.
+    id_field: integrationId
+    schema: Integration, IntegrationCreate, IntegrationPatch, IntegrationList
+    api: pypestream:contact-center-api
+    operations: [listIntegrations, createIntegration, getIntegration, updateIntegration, patchIntegration, deleteIntegration]
+  - name: Setting
+    description: Contact-center configuration.
+    schema: Setting
+    operations: [getSettings, setSettings]
+  relationships:
+  - from: Pype
+    to: Stream
+    kind: has_many
+    via: stream_id
+  - from: Stream
+    to: Chat
+    kind: has_many
+    via: stream_id
+    confidence: medium
+    note: Asserted by chat:start requiring both pype_id and stream_id; no contract models the reverse.
+  - from: Chat
+    to: Message
+    kind: has_many
+    via: conversationId
+    evidence: PUT /contactCenter/v1/conversations/{conversationId}/messages/{messageId}
+  - from: Chat
+    to: Metadata
+    kind: has_one
+    via: conversationId
+    evidence: GET/PATCH /contactCenter/v1/conversations/{conversationId}/metadata
+  - from: Chat
+    to: Transcript
+    kind: has_one
+    via: chat_id
+    evidence: GET /single-chat-transcript/{chat_id}
+  - from: Chat
+    to: Consumer
+    kind: belongs_to
+    via: consumer
+  - from: Chat
+    to: User
+    kind: belongs_to
+    via: user_id
+  - from: Agent
+    to: Chat
+    kind: has_many
+    via: chats_assigned
+    evidence: AgentObject.chats_assigned
+  - from: IntegrationList
+    to: Integration
+    kind: has_many
+- name: analytics
+  apis: [pypestream:analytics-api]
+  note: >-
+    A PostHog-derived model. Pypestream renames PostHog's "Project" to "Dataset" for the analytics
+    resources while keeping a separate /api/projects/ resource, so both names appear in one
+    contract.
+  entities:
+  - name: Organization
+    description: Top-level entity; an organization can contain multiple Projects.
+    schema: Organization
+  - name: Project
+    description: Container grouping related solutions, analytics data and settings.
+    schema: Project, TeamBasic
+  - name: Dataset
+    description: >-
+      A distinct collection of analytics data, typically corresponding to an environment
+      (Production, Testing, Development).
+    schema: TeamBasic
+  - name: Event
+    schema: ClickhouseEvent
+  - name: EventDefinition
+    schema: EventDefinition
+  - name: Person
+    schema: Person
+  - name: Cohort
+    schema: Cohort
+  - name: Action
+    schema: Action, ActionStep
+  - name: Annotation
+    schema: Annotation
+  - name: Dashboard
+    schema: Dashboard, DashboardBasic, DashboardTileBasic
+  - name: Insight
+    schema: Insight
+  - name: KPI
+    schema: KPI
+  - name: PropertyDefinition
+    schema: Property, PropertyItem
+  - name: BatchExport
+    schema: BatchExport, PatchedBatchExport, BatchExportDestination
+  - name: BatchExportRun
+    schema: BatchExportRun
+  - name: BatchExportDestination
+    schema: S3BatchExportConfig, SnowflakeBatchExportConfig
+  relationships:
+  - from: Organization
+    to: Project
+    kind: has_many
+    evidence: 'Organization: "An organization can contain multiple Projects."'
+  - from: Dataset
+    to: Event
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: Person
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: Cohort
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: Action
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: Annotation
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: Dashboard
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: Insight
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: KPI
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: EventDefinition
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: PropertyDefinition
+    kind: has_many
+    via: dataset_id
+  - from: Dataset
+    to: BatchExport
+    kind: has_many
+    via: dataset_id
+  - from: Cohort
+    to: Person
+    kind: has_many
+    evidence: GET /api/datasets/{dataset_id}/cohorts/{id}/persons/
+  - from: BatchExport
+    to: BatchExportRun
+    kind: has_many
+    via: parent_lookup_batch_export_id
+  - from: BatchExport
+    to: BatchExportDestination
+    kind: has_one
+  - from: Event
+    to: Person
+    kind: belongs_to
+    via: person_id
+  - from: Action
+    to: ActionStep
+    kind: has_many
+id_conventions:
+  uuid: true
+  uuid_evidence: >-
+    agent_id and chat_id examples are UUIDs (e.g. 72c0c608-a665-3144-99a4-2036e2f3d59d); the
+    Snowflake DDL Pypestream recommends for batch exports types uuid, distinct_id and person_id as
+    VARCHAR(36).
+  prefixed_ids: false
+  prefixed_ids_note: No Stripe-style typed id prefixes; identifiers are bare UUIDs or opaque strings.
+cross_graph_link:
+  exists: false
+  note: >-
+    No published field joins a Chat to an analytics Event, Person or Dataset. The Snowflake export
+    DDL exposes distinct_id and person_id, and the conversational graph exposes user_id and
+    consumer, but no contract states that any of these are the same value.
+subway: null
