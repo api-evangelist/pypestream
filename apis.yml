@@ -34,141 +34,665 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 apis:
-- aid: pypestream:reporting-api
-  name: Pypestream Reporting API
-  description: >-
-    Programmatic access to Pypestream automation, conversation and agent data. Retrieves single and
-    multiple agent records, session metadata and conversation transcripts over a bounded time window.
-    Available on request on a Pype-by-Pype basis; data is retained for 30 days.
+- aid: pypestream:pypestream-actions-api
+  name: Pypestream Actions API
+  description: The Actions API from Pypestream — 2 operation(s) for actions.
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
-  - Reporting
-  - Analytics
-  - Conversations
-  - Agents
+  - Actions
   properties:
   - type: OpenAPI
-    url: openapi/pypestream-reporting-api-openapi.json
+    url: openapi/pypestream-actions-api-openapi.yml
   - type: Documentation
     url: https://developers.pypestream.com/reference/reporting-api-overview
-  - type: Overlay
-    url: overlays/pypestream-reporting-api-overlay.yaml
-- aid: pypestream:contact-center-api
-  name: Pypestream Contact Center API
-  description: >-
-    Builds integrations between Pypestream and a contact center. Escalates conversations from a Pype
-    or a messaging channel to a live agent, checks agent availability and wait time, exchanges
-    messages and typing indicators, and manages contact-center integration settings.
-  humanURL: https://developers.pypestream.com/reference/contact-center-api-overview
-  baseURL: https://middleware.pypestream.com/
-  tags:
-  - Contact Center
-  - Escalation
-  - Messaging
-  - Integrations
-  properties:
-  - type: OpenAPI
-    url: openapi/pypestream-contact-center-api-openapi.json
   - type: Documentation
     url: https://developers.pypestream.com/reference/contact-center-api-overview
   - type: Webhooks
     url: asyncapi/pypestream-contact-center-webhooks.yml
-  - type: Overlay
-    url: overlays/pypestream-contact-center-api-overlay.yaml
-- aid: pypestream:middleware-api
-  name: Pypestream Middleware API
-  description: >-
-    The middleware layer behind the Contact Center API, exposing Settings, Integrations and
-    Conversations operations. The published contract declares an empty servers[] block; the sibling
-    Contact Center API contract names middleware.pypestream.com as the host for the same operations.
-  humanURL: https://developers.pypestream.com/reference/contact-center-api-overview
-  baseURL: https://middleware.pypestream.com/
-  tags:
-  - Middleware
-  - Contact Center
-  - Integrations
-  - Settings
-  properties:
-  - type: OpenAPI
-    url: openapi/pypestream-middleware-api-openapi.json
-  - type: Overlay
-    url: overlays/pypestream-middleware-api-overlay.yaml
-- aid: pypestream:engagement-api
-  name: Pypestream Engagement API
-  description: >-
-    Lets developers build interfaces and connect messaging channels so end users can engage a
-    Pypestream microapp. Creates an anonymous user session, starts and ends an engagement and sends
-    messages, paired with a Phoenix Channels WebSocket for the event stream.
-  humanURL: https://developers.pypestream.com/reference/engagement-overview
-  baseURL: https://engagement-api.pypestream.com/
-  tags:
-  - Engagement
-  - Messaging
-  - WebSocket
-  - Chat
-  properties:
-  - type: OpenAPI
-    url: openapi/pypestream-engagement-api-openapi.json
   - type: Documentation
     url: https://developers.pypestream.com/reference/engagement-overview
   - type: AsyncAPI
     url: asyncapi/pypestream-engagement-api-asyncapi.yml
-  - type: Overlay
-    url: overlays/pypestream-engagement-api-overlay.yaml
-- aid: pypestream:analytics-api
-  name: Pypestream Analytics API
-  description: >-
-    Product analytics over Pypestream datasets -- events, persons, cohorts, actions, annotations,
-    dashboards, insights (trend, funnel, retention, path), KPIs and property definitions -- plus
-    batch exports to S3 and Snowflake with backfill, pause and unpause control.
-  humanURL: https://developers.pypestream.com/reference/overview-2
-  baseURL: https://analytics.pypestream.com/
-  tags:
-  - Analytics
-  - Events
-  - Insights
-  - Data Export
-  properties:
-  - type: OpenAPI
-    url: openapi/pypestream-analytics-api-openapi.json
   - type: Documentation
     url: https://developers.pypestream.com/reference/overview-2
-  - type: Overlay
-    url: overlays/pypestream-analytics-api-overlay.yaml
-- aid: pypestream:javascript-sdk
-  name: Pypestream JavaScript SDK API
-  description: >-
-    The client-side JavaScript SDK for embedding the Pypestream conversational AI chat interface in
-    a web page, in window or inline mode. Pypestream documents the SDK's methods, configuration and
-    event handlers as an OpenAPI document; the spec states it is documentation only and not a
-    callable REST API, and its server entry is labelled "Documentation Only".
-  humanURL: https://developers.pypestream.com/reference/documentation
-  tags:
-  - SDK
-  - JavaScript
-  - Web Components
-  - Embed
-  properties:
-  - type: OpenAPI
-    url: openapi/pypestream-javascript-sdk-openapi.json
   - type: Documentation
     url: https://developers.pypestream.com/reference/documentation
-- aid: pypestream:insights-api
-  name: Pypestream Insights API
-  description: >-
-    A single-operation contract for aggregate dashboard report data. Published in Pypestream's own
-    API registry, but every servers[] entry points at an unbranded Vercel preview deployment
-    (analytics-eight-eta.vercel.app) or at localhost, so no production host is stated and no
-    baseURL is recorded here.
-  humanURL: https://developers.pypestream.com/reference/overview
+- aid: pypestream:pypestream-advanced-api
+  name: Pypestream Advanced API
+  description: Advanced SDK features
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
   tags:
-  - Insights
-  - Reporting
+  - Advanced
   properties:
   - type: OpenAPI
-    url: openapi/pypestream-insights-api-openapi.json
+    url: openapi/pypestream-advanced-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-agent-api
+  name: Pypestream Agent API
+  description: The Agent API from Pypestream — 2 operation(s) for agent.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Agent
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-agent-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-annotations-api
+  name: Pypestream Annotations API
+  description: The Annotations API from Pypestream — 2 operation(s) for annotations.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Annotations
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-annotations-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-batch-exports-api
+  name: Pypestream Batch Exports API
+  description: The Batch Exports API from Pypestream — 7 operation(s) for batch exports.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Batch Exports
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-batch-exports-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-cohorts-api
+  name: Pypestream Cohorts API
+  description: The Cohorts API from Pypestream — 3 operation(s) for cohorts.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Cohorts
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-cohorts-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-configuration-api
+  name: Pypestream Configuration API
+  description: SDK configuration methods
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-conversations-api-api
+  name: Pypestream Conversations API
+  description: Use the Conversation API after the escalate request
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Conversations API
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-conversations-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-dashboards-api
+  name: Pypestream Dashboards API
+  description: The Dashboards API from Pypestream — 2 operation(s) for dashboards.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Dashboards
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-dashboards-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-datasets-api
+  name: Pypestream Datasets API
+  description: The Datasets API from Pypestream — 2 operation(s) for datasets.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Datasets
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-datasets-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-display-control-api
+  name: Pypestream Display Control API
+  description: Control chat visibility
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Display Control
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-display-control-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-endpoints-api
+  name: Pypestream Endpoints API
+  description: API to be consumed by the 3rd party apps.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Endpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-endpoints-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-event-definitions-api
+  name: Pypestream Event Definitions API
+  description: The Event Definitions API from Pypestream — 2 operation(s) for event definitions.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Event Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-event-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-event-handlers-api
+  name: Pypestream Event Handlers API
+  description: Register event callbacks
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Event Handlers
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-event-handlers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-events-api
+  name: Pypestream Events API
+  description: The Events API from Pypestream — 2 operation(s) for events.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-events-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-insights-api
+  name: Pypestream Insights API
+  description: The Insights API from Pypestream — 7 operation(s) for insights.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-insights-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-integrations-api-api
+  name: Pypestream Integrations API
+  description: (NEW) Enhanced version of the previous Settings API
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Integrations API
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-integrations-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-kpis-api
+  name: Pypestream KP Is API
+  description: The KPIs API from Pypestream — 2 operation(s) for kpis.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - KPIs
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-kpis-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-lifecycle-api
+  name: Pypestream Lifecycle API
+  description: SDK lifecycle management
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Lifecycle
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-lifecycle-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-metadata-api
+  name: Pypestream Metadata API
+  description: The Metadata API from Pypestream — 2 operation(s) for metadata.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-metadata-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-organization-api
+  name: Pypestream Organization API
+  description: The Organization API from Pypestream — 2 operation(s) for organization.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Organization
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-organization-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-persons-api
+  name: Pypestream Persons API
+  description: The Persons API from Pypestream — 2 operation(s) for persons.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Persons
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-persons-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-projects-api
+  name: Pypestream Projects API
+  description: The Projects API from Pypestream — 2 operation(s) for projects.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-projects-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-property-definitions-api
+  name: Pypestream Property Definitions API
+  description: The Property Definitions API from Pypestream — 2 operation(s) for property definitions.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Property Definitions
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-property-definitions-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-settings-api-api
+  name: Pypestream Settings API
+  description: (DEPRECATED) Please use the new Integrations API
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Settings API
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-settings-api-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-settings-api
+  name: Pypestream Settings API
+  description: The Settings API from Pypestream — 1 operation(s) for settings.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-settings-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
+- aid: pypestream:pypestream-transcript-api
+  name: Pypestream Transcript API
+  description: The Transcript API from Pypestream — 2 operation(s) for transcript.
+  humanURL: https://developers.pypestream.com/reference/reporting-api-overview
+  baseURL: https://reporting.pypestream.com/api/v2/
+  tags:
+  - Transcript
+  properties:
+  - type: OpenAPI
+    url: openapi/pypestream-transcript-api-openapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/reporting-api-overview
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/contact-center-api-overview
+  - type: Webhooks
+    url: asyncapi/pypestream-contact-center-webhooks.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/engagement-overview
+  - type: AsyncAPI
+    url: asyncapi/pypestream-engagement-api-asyncapi.yml
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/overview-2
+  - type: Documentation
+    url: https://developers.pypestream.com/reference/documentation
 common:
+- type: Overlay
+  url: overlays/pypestream-reporting-api-overlay.yaml
+- type: Overlay
+  url: overlays/pypestream-contact-center-api-overlay.yaml
+- type: Overlay
+  url: overlays/pypestream-middleware-api-overlay.yaml
+- type: Overlay
+  url: overlays/pypestream-engagement-api-overlay.yaml
+- type: Overlay
+  url: overlays/pypestream-analytics-api-overlay.yaml
 - type: Website
   url: https://www.pypestream.ai/
 - type: DeveloperPortal
