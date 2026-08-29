@@ -9,6 +9,17 @@ description: >-
   agent escalation, an Engagement API with a Phoenix Channels WebSocket event stream for embedding
   chat in any channel, an Analytics API for product analytics and warehouse batch exports, and an
   OpenAPI-documented client-side JavaScript SDK for embedding the chat widget.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.pypestream.ai/pypestream-logo-black.webp
 url: https://raw.githubusercontent.com/api-evangelist/pypestream/refs/heads/main/apis.yml
 x-type: company
