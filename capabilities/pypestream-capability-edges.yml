@@ -1,0 +1,45 @@
+slug: pypestream
+provider: Pypestream
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Conversations API
+  spec_file: pypestream-conversations-api-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.75
+  evidence: POST /contactCenter/v1/conversations/{conversationId}/end End Chat; GET /contactCenter/v2/conversations/{conversationId}/history
+    Retrieve Conversation History
+  reason: Contact-centre conversation handling — sending messages, typing indicators, ending chats and
+    retrieving history — realises inbound customer contact handling/resolution.
+- tag: Insights
+  spec_file: pypestream-insights-api-openapi.yml
+  capability_id: BC-4280.30
+  capability_id_l1: BC-4280
+  capability_name: Product Usage Analytics
+  confidence: 0.75
+  evidence: insights_funnel_retrieve, insights_path_retrieve, insights_retention_retrieve, insights_trend_retrieve
+  reason: Funnel, path, retention and trend analyses over event datasets are exactly the analytical views
+    of product usage described by Product Usage Analytics. Some chance the intended framing is generic
+    analytics/BI, hence 0.75.
+- tag: Endpoints
+  spec_file: pypestream-endpoints-api-openapi.yml
+  capability_id: BC-430.10
+  capability_id_l1: BC-430
+  capability_name: Customer Inquiry Management
+  confidence: 0.7
+  evidence: POST /messaging/v1/chats/{chat_id}/start Start Engagement; POST /messaging/v1/chats/{chat_id}/message
+    Send Message
+  reason: Messaging engagement lifecycle (start, message, typing, end) for consumer chat sessions with
+    the AI agent — inbound customer contact handling; generic tag name lowers confidence slightly.

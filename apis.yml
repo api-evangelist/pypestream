@@ -694,6 +694,9 @@ apis:
   - type: Documentation
     url: https://developers.pypestream.com/reference/documentation
 common:
+- type: CapabilityMap
+  url: capabilities/pypestream-capability-edges.yml
+  name: Pypestream Business Capability Map
 - type: Overlay
   url: overlays/pypestream-reporting-api-overlay.yaml
 - type: Overlay
