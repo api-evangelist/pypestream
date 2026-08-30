@@ -1,0 +1,317 @@
+openapi: 3.2.0
+info:
+  title: Analytics Actions API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Actions
+paths:
+  /api/datasets/{dataset_id}/actions/:
+    get:
+      operationId: actions_list
+      description: 'Actions: A collection of one or more events grouped together in Data Management to represent a specific user behavior or process without requiring code changes. Can be used like standard events in analysis.
+
+
+        Get a list of actions for a specific dataset.
+
+        '
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Actions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedActionList'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/PaginatedActionList'
+          description: ''
+  /api/datasets/{dataset_id}/actions/{id}/:
+    get:
+      operationId: actions_retrieve
+      description: 'Actions: A collection of one or more events grouped together in Data Management to represent a specific user behavior or process without requiring code changes. Can be used like standard events in analysis.
+
+
+        Get a single action from a specific dataset.
+
+        '
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this action.
+        required: true
+      tags:
+      - Actions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Action'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Action'
+          description: ''
+components:
+  schemas:
+    Action:
+      type: object
+      description: Serializer mixin that resolves appropriate response for tags depending on license.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        description:
+          type: string
+        tags:
+          type: array
+          items: {}
+        post_to_slack:
+          type: boolean
+        slack_message_format:
+          type: string
+          maxLength: 600
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionStep'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        deleted:
+          type: boolean
+        is_calculating:
+          type: boolean
+          readOnly: true
+        last_calculated_at:
+          type: string
+          format: date-time
+        team_id:
+          type: integer
+          readOnly: true
+        is_action:
+          type: boolean
+          readOnly: true
+          default: true
+      required:
+      - created_at
+      - created_by
+      - id
+      - is_action
+      - is_calculating
+      - team_id
+    ActionStep:
+      type: object
+      properties:
+        id:
+          type: string
+        event:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        tag_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        text:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        text_matching:
+          enum:
+          - contains
+          - regex
+          - exact
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+        href:
+          type:
+          - string
+          - 'null'
+          maxLength: 65535
+        href_matching:
+          enum:
+          - contains
+          - regex
+          - exact
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+        selector:
+          type:
+          - string
+          - 'null'
+          maxLength: 65535
+        url:
+          type:
+          - string
+          - 'null'
+          maxLength: 65535
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        url_matching:
+          enum:
+          - contains
+          - regex
+          - exact
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+        properties:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+    PaginatedActionList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

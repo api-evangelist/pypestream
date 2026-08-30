@@ -1,0 +1,385 @@
+openapi: 3.2.0
+info:
+  title: Pypestream Integrations API
+  version: 1.0.1
+  contact:
+    email: support@pypestream.com
+  termsOfService: https://www.pypestream.com/privacy-policy/
+  description: 'Operations tagged Integrations API across 2 of this provider''s published API definitions: pypestream-contact-center-api-openapi.json, pypestream-middleware-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://middleware.pypestream.com/
+  description: Live
+- url: http://middleware-sandbox.pypestream.com/
+  description: Sandbox
+security: []
+tags:
+- description: (NEW) Enhanced version of the previous Settings API
+  name: Integrations API
+paths:
+  /contactCenter/v2/integrations:
+    get:
+      callbacks: {}
+      deprecated: false
+      operationId: listIntegrations
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationList'
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - BasicAuth: []
+      summary: List the integrations
+      tags:
+      - Integrations API
+    post:
+      callbacks: {}
+      deprecated: false
+      operationId: createIntegration
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationCreate'
+        description: Integration object that needs to be created
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - BasicAuth: []
+      summary: Create a new integration
+      tags:
+      - Integrations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+  /contactCenter/v2/integrations/{integrationId}:
+    delete:
+      callbacks: {}
+      deprecated: false
+      operationId: deleteIntegration
+      parameters:
+      - description: The Integration ID
+        in: path
+        name: integrationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - BasicAuth: []
+      summary: Delete the integration
+      tags:
+      - Integrations API
+    get:
+      callbacks: {}
+      deprecated: false
+      operationId: getIntegration
+      parameters:
+      - description: The Integration ID
+        in: path
+        name: integrationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationList'
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - BasicAuth: []
+      summary: Get the integration
+      tags:
+      - Integrations API
+    patch:
+      callbacks: {}
+      deprecated: false
+      operationId: patchIntegration
+      parameters:
+      - description: The Integration ID
+        in: path
+        name: integrationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationPatch'
+        description: Integration object that needs to be patched
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - BasicAuth: []
+      summary: Patch an integration
+      tags:
+      - Integrations API
+    put:
+      callbacks: {}
+      deprecated: false
+      operationId: updateIntegration
+      parameters:
+      - description: The Integration ID
+        in: path
+        name: integrationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationCreate'
+        description: Integration object that needs to be updated
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - BasicAuth: []
+      summary: Update an integration
+      tags:
+      - Integrations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+components:
+  schemas:
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
+    Integration:
+      properties:
+        callbackToken:
+          format: hash
+          type: string
+        callbackURL:
+          format: url
+          type: string
+        id:
+          format: uuid
+          type: string
+        integrationFields:
+          properties: {}
+          type: object
+        integrationName:
+          type: string
+      required:
+      - id
+      - integrationName
+      - integrationFields
+      - callbackURL
+      - callbackToken
+      type: object
+    IntegrationList:
+      properties:
+        integrations:
+          items:
+            $ref: '#/components/schemas/Integration'
+          type: array
+      required:
+      - integrations
+      type: object
+    IntegrationCreate:
+      properties:
+        callbackToken:
+          format: hash
+          type: string
+        callbackURL:
+          format: url
+          type: string
+        integrationFields:
+          properties: {}
+          type: object
+        integrationName:
+          type: string
+      required:
+      - integrationName
+      - integrationFields
+      - callbackURL
+      - callbackToken
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    IntegrationPatch:
+      properties:
+        callbackToken:
+          format: hash
+          type: string
+        callbackURL:
+          format: url
+          type: string
+        integrationFields:
+          properties: {}
+          type: object
+        integrationName:
+          type: string
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+  securitySchemes:
+    BasicAuth:
+      scheme: basic
+      type: http
+    TokenHeader:
+      in: header
+      name: X-Pypestream-Token
+      type: apiKey
+x-refined-from:
+- pypestream-contact-center-api-openapi.json
+- pypestream-middleware-api-openapi.json
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

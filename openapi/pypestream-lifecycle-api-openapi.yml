@@ -1,0 +1,295 @@
+openapi: 3.2.0
+info:
+  title: Pypestream JavaScript SDK Lifecycle API
+  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  version: 3.0.0
+  contact:
+    name: Pypestream Support
+    url: https://support.pypestream.com
+  license:
+    name: Proprietary
+    url: https://pypestream.com/terms
+servers:
+- url: https://api.pypestream.com/v3
+  description: Production SDK API (Documentation Only)
+security: []
+tags:
+- name: Lifecycle
+  description: SDK lifecycle management
+paths:
+  /boot:
+    post:
+      tags:
+      - Lifecycle
+      summary: Initialize and boot SDK
+      description: 'Initializes and starts the chat interface. Must be called before any other methods (except `config()`).
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        // Window mode
+
+        Pypestream.boot({ APP_ID: ''your-app-id'' });
+
+
+        // Inline mode
+
+        const container = document.getElementById(''chat-container'');
+
+        Pypestream.boot({ APP_ID: ''your-app-id'' }, container);
+
+        ```
+
+
+        **Behavior:**
+
+        - If targetElement is provided, switches to ''inline'' mode
+
+        - If targetElement is omitted, uses ''window'' mode
+
+        - Can be called multiple times - shows chat if already booted
+
+        '
+      operationId: boot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - config
+              properties:
+                config:
+                  $ref: '#/components/schemas/PypestreamConfig'
+                targetElement:
+                  type: string
+                  description: DOM element selector for inline mode (e.g., "#chat-container")
+                  example: '#chat-container'
+            examples:
+              windowMode:
+                summary: Window mode
+                value:
+                  config:
+                    APP_ID: your-app-id
+                    displayMode: window
+              inlineMode:
+                summary: Inline mode
+                value:
+                  config:
+                    APP_ID: your-app-id
+                    displayMode: inline
+                  targetElement: '#chat-container'
+      responses:
+        '200':
+          description: SDK booted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: SDK initialized successfully
+                  displayMode:
+                    type: string
+                    enum:
+                    - window
+                    - inline
+                    example: inline
+        '400':
+          description: Missing required configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Missing APP_ID
+                message: You must provide an APP_ID string in the config object
+  /shutdown:
+    post:
+      tags:
+      - Lifecycle
+      summary: Shutdown SDK
+      description: 'Completely shuts down and removes the chat interface.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.shutdown();
+
+        ```
+
+
+        **Behavior:**
+
+        - Closes chat interface
+
+        - Removes iframe and container elements
+
+        - Clears all body scroll locks
+
+        - Closes LaunchDarkly client
+
+        - Resets boot state
+
+        - Can call `boot()` again after shutdown
+
+        '
+      operationId: shutdown
+      responses:
+        '200':
+          description: SDK shut down successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: SDK shut down successfully
+        '400':
+          description: Cannot shutdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /restartChat:
+    post:
+      tags:
+      - Lifecycle
+      summary: Restart chat session
+      description: 'Restarts the current chat session without shutting down the interface.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.restartChat();
+
+        ```
+
+
+        **Behavior:**
+
+        - Clears current conversation
+
+        - Starts new chat session
+
+        - Maintains same configuration
+
+        - Keeps interface visible
+
+        - Triggers `onChatRestart` handlers
+
+        '
+      operationId: restartChat
+      responses:
+        '200':
+          description: Chat restarted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Chat session restarted
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: Configuration Error
+        message:
+          type: string
+          description: Detailed error message
+          example: You must provide an APP_ID string in the config object
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+    InitialMessages:
+      type: object
+      description: Configure initial welcome messages
+      properties:
+        welcomeMessage:
+          type: string
+          description: Custom welcome message text
+          example: Hello! How can I help you today?
+        showNextThinkingBubble:
+          type: boolean
+          description: Show thinking bubble animation
+          default: true
+          example: true
+    PypestreamConfig:
+      type: object
+      required:
+      - APP_ID
+      properties:
+        APP_ID:
+          type: string
+          description: Your Pypestream application ID (required)
+          example: your-app-id-here
+        debugMode:
+          type: boolean
+          description: Enable debug logging in console
+          default: false
+          example: true
+        displayMode:
+          type: string
+          enum:
+          - window
+          - inline
+          description: Display mode for the chat interface
+          default: window
+          example: inline
+        APIMode:
+          type: boolean
+          description: Enable API mode
+          default: true
+          example: true
+        withInlineAppLoader:
+          type: boolean
+          description: Show loading animation in inline mode
+          default: true
+          example: true
+        showSurveyForWindowMode:
+          type: boolean
+          description: Enable survey in window mode after chat ends
+          example: false
+        initialMessages:
+          $ref: '#/components/schemas/InitialMessages'
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'API key for accessing Pypestream services (if applicable).
+
+        Note: The JavaScript SDK does not require API keys for client-side usage.
+
+        '
+externalDocs:
+  description: Full Pypestream Documentation
+  url: https://docs.pypestream.com

@@ -1,0 +1,677 @@
+openapi: 3.2.0
+info:
+  title: Pypestream Insights API
+  version: '1.0'
+  description: 'Operations tagged Insights across 2 of this provider''s published API definitions: pypestream-analytics-api-openapi.json, pypestream-insights-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+- url: https://analytics-eight-eta.vercel.app/live/
+  description: Live Deployed server.
+- url: https://analytics-eight-eta.vercel.app/sandbox/
+  description: Sandbox Deployed server.
+- url: http://localhost:5000/live/
+  description: Local Live Server for testing.
+- url: http://localhost:5000/sandbox/
+  description: Local Sandbox Server for testing.
+tags:
+- name: Insights
+paths:
+  /api/datasets/{dataset_id}/insights/:
+    get:
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+
+
+        Get a list of insights for a specific dataset.
+
+        '
+      operationId: insights_list
+      parameters:
+      - in: query
+        name: created_by
+        schema:
+          type: integer
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: short_id
+        schema:
+          type: string
+      tags:
+      - Insights
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInsightList'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/PaginatedInsightList'
+          description: ''
+      security:
+      - APIKey: []
+    servers:
+    - url: https://analytics.pypestream.com/
+      description: Production server US
+  /api/datasets/{dataset_id}/insights/{id}/:
+    get:
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+
+
+        Get a specific insight from a specific dataset.
+
+        '
+      operationId: insights_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - in: query
+        name: from_dashboard
+        schema:
+          type: integer
+        description: '
+
+          When loading an insight for a dashboard pass a `from_dashboard` query parameter containing the dashboard ID
+
+
+          e.g. `"/api/datasets/{team_id}/insights/{insight_id}?from_dashboard={dashboard_id}"`
+
+
+          Insights can be added to more than one dashboard, this allows the insight to be loaded in the correct context.
+
+
+          Using the correct cache and enriching the response with dashboard specific config (e.g. layouts or colors)'
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this insight.
+        required: true
+      - in: query
+        name: refresh
+        schema:
+          type: boolean
+        description: "\n                The client can request that an insight be refreshed by setting the `refresh=true` parameter.\n                The server will then decide if the data should or not be refreshed based on a set of heuristics\n                meant to determine the staleness of cached data. The result will contain as `is_cached` field\n                that indicates whether the insight was actually refreshed or not through the request."
+      tags:
+      - Insights
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insight'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Insight'
+          description: ''
+      security:
+      - APIKey: []
+    servers:
+    - url: https://analytics.pypestream.com/
+      description: Production server US
+  /api/datasets/{dataset_id}/insights/funnel/:
+    get:
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+
+
+        Get a funnel insight for a specific dataset.
+
+        '
+      operationId: insights_funnel_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      tags:
+      - Insights
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insight'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Insight'
+          description: ''
+      security:
+      - APIKey: []
+    servers:
+    - url: https://analytics.pypestream.com/
+      description: Production server US
+  /api/datasets/{dataset_id}/insights/path/:
+    get:
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+
+
+        Get a path insight for a specific dataset.
+
+        '
+      operationId: insights_path_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      tags:
+      - Insights
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insight'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Insight'
+          description: ''
+      security:
+      - APIKey: []
+    servers:
+    - url: https://analytics.pypestream.com/
+      description: Production server US
+  /api/datasets/{dataset_id}/insights/retention/:
+    get:
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+
+
+        Get a retention insight for a specific dataset.
+
+        '
+      operationId: insights_retention_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      tags:
+      - Insights
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insight'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Insight'
+          description: ''
+      security:
+      - APIKey: []
+    servers:
+    - url: https://analytics.pypestream.com/
+      description: Production server US
+  /api/datasets/{dataset_id}/insights/trend/:
+    get:
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+
+
+        Get a trend insight for a specific dataset.
+
+        '
+      operationId: insights_trend_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      tags:
+      - Insights
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Insight'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Insight'
+          description: ''
+      security:
+      - APIKey: []
+    servers:
+    - url: https://analytics.pypestream.com/
+      description: Production server US
+  /insights:
+    get:
+      summary: Get Insights for Time Period
+      parameters:
+      - name: time_period
+        in: query
+        required: true
+        description: The time period to retrieve data for, in server time.
+        schema:
+          type: string
+          enum:
+          - today
+          - yesterday
+          - 7d
+          - 30d
+      - name: solution_name
+        in: query
+        required: false
+        description: The solution to filter data for. If not provided, will return data for all solutions within the customer.
+        schema:
+          type: string
+          example: DigitalAssistant
+      responses:
+        '200':
+          description: Object corresponding to the insights in specified time_period.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  env:
+                    type: string
+                    example: live
+                  time_period:
+                    type: string
+                    example: 7d
+                  totals:
+                    type: object
+                    properties:
+                      range:
+                        type: array
+                        example:
+                        - 10-04-21 00:00:00
+                        - 10-04-21 11:59:59
+                        items:
+                          type: string
+                      sessions:
+                        type: object
+                        properties:
+                          total:
+                            type: number
+                            example: 50
+                          delta:
+                            type: number
+                            example: -0.5123
+                      escalations:
+                        type: object
+                        properties:
+                          total:
+                            type: number
+                            example: 0
+                          delta:
+                            type: number
+                            example: null
+                      automated:
+                        type: object
+                        properties:
+                          total:
+                            type: number
+                            example: 50
+                          delta:
+                            type: number
+                            example: -0.512
+                      escalation_rate:
+                        type: object
+                        properties:
+                          total:
+                            type: number
+                            example: 0
+                          delta:
+                            type: number
+                            example: -1
+                  hourly_breakdown:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        sessions:
+                          type: number
+                          example: 114
+                        escalations:
+                          type: number
+                          example: 87
+                        range:
+                          type: array
+                          items:
+                            example:
+                            - 10-04-21 00:00:00
+                            - 10-04-21 00:59:59
+      tags:
+      - Insights
+    servers:
+    - url: https://analytics-eight-eta.vercel.app/live/
+      description: Live Deployed server.
+    - url: https://analytics-eight-eta.vercel.app/sandbox/
+      description: Sandbox Deployed server.
+    - url: http://localhost:5000/live/
+      description: Local Live Server for testing.
+    - url: http://localhost:5000/sandbox/
+      description: Local Sandbox Server for testing.
+components:
+  schemas:
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
+    Insight:
+      type: object
+      description: Simplified serializer to speed response times when loading large amounts of objects.
+      properties:
+        caching_details:
+          type: string
+          readOnly: true
+          description: Details about the decision to refresh this insight
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        crop_enabled:
+          type: boolean
+          default: false
+        dashboard_tiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardTileBasic'
+          readOnly: true
+          description: "\n    A dashboard tile ID and dashboard_id for each of the dashboards that this insight is displayed on.\n    "
+        dashboards:
+          type: array
+          items:
+            type: integer
+          description: "\n        DEPRECATED. Will be removed in a future release. Use dashboard_tiles instead.\n        A dashboard ID for each of the dashboards that this insight is displayed on.\n        "
+        deleted:
+          type: boolean
+        derived_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        effective_privilege_level:
+          enum:
+          - 21
+          - 37
+          type: integer
+          readOnly: true
+        effective_restriction_level:
+          enum:
+          - 21
+          - 37
+          type: integer
+          readOnly: true
+        favorited:
+          type: boolean
+        filters:
+          type: object
+          additionalProperties: {}
+        id:
+          type: integer
+          readOnly: true
+        iframe_display_params:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+        iframe_type:
+          enum:
+          - looker
+          - null
+          type:
+          - string
+          - 'null'
+        iframe_url:
+          type:
+          - string
+          - 'null'
+          format: uri
+        is_cached:
+          type: string
+          readOnly: true
+        is_sample:
+          type: boolean
+          readOnly: true
+        last_modified_at:
+          type: string
+          format: date-time
+          readOnly: true
+        last_modified_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        last_refresh:
+          type: string
+          readOnly: true
+          description: "\n    The datetime this insight's results were generated.\n    If added to one or more dashboards the insight can be refreshed separately on each.\n    Returns the appropriate last_refresh datetime for the context the insight is viewed in\n    (see from_dashboard query parameter).\n    "
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        next_allowed_client_refresh:
+          type: string
+          readOnly: true
+          description: "\n    The earliest possible datetime at which we'll allow the cached results for this insight to be refreshed\n    by querying the database.\n    "
+        order:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        query:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: Query node JSON string
+        result:
+          type: string
+          readOnly: true
+        saved:
+          type: boolean
+        short_id:
+          type: string
+          readOnly: true
+        tags:
+          type: array
+          items: {}
+        timezone:
+          type: string
+          readOnly: true
+          description: The timezone this chart is displayed in.
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - caching_details
+      - created_at
+      - created_by
+      - dashboard_tiles
+      - effective_privilege_level
+      - effective_restriction_level
+      - id
+      - is_cached
+      - is_sample
+      - last_modified_at
+      - last_modified_by
+      - last_refresh
+      - next_allowed_client_refresh
+      - result
+      - short_id
+      - timezone
+      - updated_at
+    DashboardTileBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dashboard_id:
+          type: integer
+          readOnly: true
+        deleted:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - dashboard_id
+      - id
+    PaginatedInsightList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Insight'
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- pypestream-analytics-api-openapi.json
+- pypestream-insights-api-openapi.json
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

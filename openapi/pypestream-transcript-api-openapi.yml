@@ -1,0 +1,232 @@
+openapi: 3.2.0
+info:
+  title: Reporting Transcript API
+  description: Access automation, conversation and agent data in Pypestream..
+  version: '1.0'
+servers:
+- url: https://reporting.pypestream.com/api/v2/
+  description: Production Environement
+- url: https://reporting-sandbox.pypestream.com/api/v2/
+  description: Sandbox Environment
+tags:
+- name: Transcript
+paths:
+  /single-chat-transcript/{chat_id}:
+    get:
+      summary: Single Transcript
+      description: Retrieves a specific transcript identified by the Chat/Session ID.
+      security:
+      - BasicAuth: []
+      parameters:
+      - description: Chat/Session ID
+        in: path
+        name: chat_id
+        required: true
+        schema:
+          example: 02e4f194-c2fd-4f19-876a-686f2f7c3be5
+          type: string
+      - description: Enables retrieval of Session Variables which include the prefix `RAPI_`.
+        in: query
+        name: sessionsVariables
+        required: false
+        schema:
+          example: false
+          type: boolean
+      responses:
+        '200':
+          description: Successful request with response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptObject'
+        '400':
+          description: Incomplete or invalid input
+        '401':
+          description: Unauthorized
+        '409':
+          description: Duplicated entry
+      tags:
+      - Transcript
+  /multi-chat-transcript:
+    get:
+      summary: Multiple Transcripts
+      description: Retrieves transcripts for multiple conversations between a specific time frame, no more than one hour apart.
+      security:
+      - BasicAuth: []
+      parameters:
+      - description: Timestamp in RFC3339 (YYYY-MM-DDTHH:MM:SSZ) format.
+        in: query
+        name: from
+        required: true
+        schema:
+          example: '2021-12-20T00:00:00Z'
+          type: string
+      - description: Timestamp in RFC3339 (YYYY-MM-DDTHH:MM:SSZ) format.
+        in: query
+        name: to
+        required: true
+        schema:
+          example: '2021-12-20T23:23:59Z'
+          type: string
+      - description: Enables retrieval of Session Variables which include the prefix `RAPI_`.
+        in: query
+        name: sessionsVariables
+        required: false
+        schema:
+          example: false
+          type: boolean
+      - description: Specifies if the results should only include completed conversations (only relevant if searching by the start time of the conversations).
+        in: query
+        name: completed_chats_only
+        required: false
+        schema:
+          example: false
+          type: boolean
+      - description: Defines if the `to` & `from` parameters in the time frame refer to the session start time or the session end time (new feature, not currently deployed on all environments).
+        in: query
+        name: search_by
+        required: false
+        schema:
+          type: string
+          enum:
+          - start_ts
+          - end_ts
+          example: end_ts
+      responses:
+        '200':
+          description: successful request with response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiTranscriptObject'
+        '400':
+          description: Incomplete or invalid input
+        '401':
+          description: Unauthorized
+        '409':
+          description: Duplicated entry
+      tags:
+      - Transcript
+components:
+  schemas:
+    MultiTranscriptObject:
+      type: array
+      items:
+        $ref: '#/components/schemas/TranscriptObject'
+      example:
+      - consumer:
+          type: Web chat visitor
+        conversation_id: 15ea544c-99dd-4a11-a999-b8dd2f03f426
+        metadata:
+          end_comment: undefined
+          end_tags: []
+          pype_name: Customer.SolutionOne
+          stream_name: Support
+        transcript:
+        - message: Hello, welcome to this solution.
+          participant: Customer.SolutionOne
+          seq_num: 1
+          timestamp: '2020-06-05T12:32:11.000Z'
+          type: bot
+        - message: How can I help?
+          participant: Customer.SolutionOne
+          seq_num: 2
+          timestamp: '2020-06-05T12:32:11.000Z'
+          type: bot
+        - message: Id like to check my account balance
+          participant: Web chat visitor
+          seq_num: 4
+          timestamp: '2020-06-05T12:32:15.000Z'
+          type: consumer
+      - consumer:
+          type: Web chat visitor
+        conversation_id: 15ea324c-99dd-4a11-a999-b8dd2f763h65
+        metadata:
+          end_comment: undefined
+          end_tags: []
+          pype_name: Customer.SolutionOne
+          stream_name: Support
+        transcript:
+        - message: Hello, welcome to this solution.
+          participant: Customer.SolutionOne
+          seq_num: 1
+          timestamp: '2020-06-05T12:35:21.000Z'
+          type: bot
+        - message: How can I help?
+          participant: Customer.SolutionOne
+          seq_num: 2
+          timestamp: '2020-06-05T12:35:21.000Z'
+          type: bot
+        - message: Can you help me reset my password?
+          participant: Web chat visitor
+          seq_num: 4
+          timestamp: '2020-06-05T12:35:25.000Z'
+          type: consumer
+    TranscriptObject:
+      type: object
+      properties:
+        consumer:
+          type: object
+          description: An object containing details about the end-user.
+          properties:
+            type:
+              type: string
+              example: Web chat visitor
+        conversation_id:
+          type: string
+          description: ID of the conversation.
+          example: 15ea544c-99dd-4a11-a999-b8dd2f03f426
+        metadata:
+          type: object
+          description: An object containing metadata values related to the conversation.
+          properties:
+            end_comment:
+              type: string
+              description: End comment, if provided by an agent on conversation-end.
+              example: undefined
+            end_tags:
+              type: array
+              description: End tags, if provided by an agent on conversation-end.
+              items:
+                type: string
+            pype_name:
+              type: string
+              description: Name of the pype in which the conversation occurred.
+              example: Customer.SolutionOne
+            stream_name:
+              type: string
+              description: Name of the stream in which the conversation occurred.
+              example: Support
+        transcript:
+          type: array
+          description: An array containing objects pertaining to each message sent or received in the conversation.
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                description: A string of the message sent or received.
+                example: Hello welcome to this solution.
+              participant:
+                type: string
+                description: Name of the participant, which can be either a Solution, End-User, or an Agent.
+                example: Customer.SolutionOne
+              seq_num:
+                type: number
+                description: The sequence number of the message, starting at index 1. This value specified the order of the messages as they occurred.
+                example: 1
+              timestamp:
+                type: string
+                description: The timestamp of the individual message. In UTC timezone.
+                example: '2020-06-05T12:32:11.000Z'
+              type:
+                type: string
+                description: Defines whether the message was sent by a solution, agent, or end-user.
+                example: bot
+              sessionsVariables:
+                type: object
+                description: If the sessionsVariables=true parameter is provided, it returns an object containing all session variables prefixed by _RAPI and their corresponding values. Any variables not including this prefix are excluded from reporting.
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

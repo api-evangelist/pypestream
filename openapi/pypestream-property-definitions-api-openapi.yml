@@ -1,0 +1,151 @@
+openapi: 3.2.0
+info:
+  title: Analytics Property Definitions API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Property Definitions
+paths:
+  /api/datasets/{dataset_id}/property_definitions/:
+    get:
+      description: 'Property Definitions: Metadata about the properties associated with events, persons, or groups in Analytics.  Property definitions provide context and details about the attributes tracked, such as data type, usage frequency, and whether they are numerical.
+
+
+        Get a list of property definitions for a specific dataset.
+
+        '
+      operationId: property_definitions_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: event_names
+        schema:
+          type: string
+          minLength: 1
+        description: If sent, response value will have `is_seen_on_filtered_events` populated. JSON-encoded
+      - in: query
+        name: excluded_properties
+        schema:
+          type: string
+          minLength: 1
+        description: JSON-encoded list of excluded properties
+      - in: query
+        name: filter_by_event_names
+        schema:
+          type:
+          - boolean
+          - 'null'
+        description: Whether to return only properties for events in `event_names`
+      - in: query
+        name: group_type_index
+        schema:
+          type: integer
+        description: What group type is the property for. Only should be set if `type=group`
+      - in: query
+        name: is_feature_flag
+        schema:
+          type:
+          - boolean
+          - 'null'
+        description: Whether to return only (or excluding) feature flag properties
+      - in: query
+        name: is_numerical
+        schema:
+          type:
+          - boolean
+          - 'null'
+        description: Whether to return only (or excluding) numerical property definitions
+      - in: query
+        name: properties
+        schema:
+          type: string
+          minLength: 1
+        description: Comma-separated list of properties to filter
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Searches properties by name
+      - in: query
+        name: type
+        schema:
+          enum:
+          - event
+          - person
+          - group
+          type: string
+          default: event
+          minLength: 1
+        description: What property definitions to return
+      tags:
+      - Property Definitions
+      responses:
+        '200':
+          description: No response body
+  /api/datasets/{dataset_id}/property_definitions/{id}/:
+    get:
+      description: 'Property Definitions: Metadata about the properties associated with events, persons, or groups in Analytics.  Property definitions provide context and details about the attributes tracked, such as data type, usage frequency, and whether they are numerical.
+
+
+        Get a specific property definition from a specific dataset.
+
+        '
+      operationId: property_definitions_retrieve_2
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Property Definitions
+      responses:
+        '200':
+          description: No response body
+components:
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

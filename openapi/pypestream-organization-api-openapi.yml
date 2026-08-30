@@ -1,0 +1,147 @@
+openapi: 3.2.0
+info:
+  title: Analytics Organization API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Organization
+paths:
+  /api/organization/:
+    get:
+      description: 'Organization: The top-level entity within the Pypestream platform structure. An organization can contain  multiple Projects. Access might be switched via an Organization Selector.
+
+
+        Get a list of organizations.
+
+        '
+      operationId: organization_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Organization
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationList'
+          description: ''
+  /api/organization/{id}/:
+    get:
+      description: 'Organization: The top-level entity within the Pypestream platform structure. An organization can contain  multiple Projects. Access might be switched via an Organization Selector.
+
+
+        Get a specific organization by ID.
+
+        '
+      operationId: organization_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this organization.
+        required: true
+      tags:
+      - Organization
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: ''
+components:
+  schemas:
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 400
+        status:
+          enum:
+          - ACTIVE
+          - LOCKED
+          type: string
+        is_managed:
+          type: boolean
+        parent:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      required:
+      - name
+    PaginatedOrganizationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

@@ -1,0 +1,236 @@
+openapi: 3.2.0
+info:
+  title: Analytics Annotations API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Annotations
+paths:
+  /api/datasets/{dataset_id}/annotations/:
+    get:
+      description: 'Annotations: Dated notes or comments attached to timelines or Insight charts to provide shared context about specific events (e.g., feature releases, marketing campaigns) that might influence metrics. Managed under Data Management and viewable on charts.
+
+
+        Get a list of annotations for a specific dataset.
+
+        '
+      operationId: annotations_list
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Annotations
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAnnotationList'
+          description: ''
+  /api/datasets/{dataset_id}/annotations/{id}/:
+    get:
+      operationId: annotations_retrieve
+      description: 'Annotations: Dated notes or comments attached to timelines or Insight charts to provide shared context about specific events (e.g., feature releases, marketing campaigns) that might influence metrics. Managed under Data Management and viewable on charts.
+
+
+        Get a specific annotation from a specific dataset.
+
+        '
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this annotation.
+        required: true
+      tags:
+      - Annotations
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+          description: ''
+components:
+  schemas:
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
+    Annotation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        content:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        date_marker:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        creation_type:
+          enum:
+          - USR
+          - GIT
+          type: string
+        dashboard_item:
+          type:
+          - integer
+          - 'null'
+        insight_short_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        insight_name:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        deleted:
+          type: boolean
+        scope:
+          enum:
+          - dashboard_item
+          - dataset
+          - project
+          type: string
+      required:
+      - created_at
+      - created_by
+      - id
+      - insight_name
+      - insight_short_id
+      - updated_at
+    PaginatedAnnotationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Annotation'
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

@@ -1,0 +1,82 @@
+openapi: 3.2.0
+info:
+  title: Pypestream JavaScript SDK Advanced API
+  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  version: 3.0.0
+  contact:
+    name: Pypestream Support
+    url: https://support.pypestream.com
+  license:
+    name: Proprietary
+    url: https://pypestream.com/terms
+servers:
+- url: https://api.pypestream.com/v3
+  description: Production SDK API (Documentation Only)
+security: []
+tags:
+- name: Advanced
+  description: Advanced SDK features
+paths:
+  /events/register:
+    post:
+      tags:
+      - Advanced
+      summary: Register custom events
+      description: "Registers custom event listeners for advanced integration scenarios.\n\n**JavaScript Usage:**\n```javascript\nPypestream.registerForEvents(\n  {\n    'CUSTOM_EVENT': (data) => {\n      console.log('Custom event:', data);\n    }\n  },\n  'myEventTarget',\n  true\n);\n```\n"
+      operationId: registerForEvents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - eventHandles
+              - eventTarget
+              properties:
+                eventHandles:
+                  type: object
+                  description: Map of event names to handler functions
+                  additionalProperties:
+                    type: string
+                  example:
+                    CUSTOM_EVENT: handleCustomEvent
+                eventTarget:
+                  type: string
+                  description: Target identifier for events
+                  example: myEventTarget
+                eventBuffer:
+                  type: boolean
+                  description: Whether to buffer events
+                  example: true
+      responses:
+        '200':
+          description: Events registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  registeredEvents:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                    - CUSTOM_EVENT
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'API key for accessing Pypestream services (if applicable).
+
+        Note: The JavaScript SDK does not require API keys for client-side usage.
+
+        '
+externalDocs:
+  description: Full Pypestream Documentation
+  url: https://docs.pypestream.com

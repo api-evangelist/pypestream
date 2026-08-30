@@ -1,0 +1,317 @@
+openapi: 3.2.0
+info:
+  title: Analytics Events API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Events
+paths:
+  /api/datasets/{dataset_id}/events/:
+    get:
+      description: 'Events: Specific user actions (e.g., clicks, page views, form submissions, Pype escalations) or system  occurrences (e.g., Pype session started) captured by Analytics. They form the basis of most analyses.
+
+
+        Note: this endpoint is for overview/exploration purposes. For data export use batch_exports endpoints.
+
+
+        Get a list of events for a specific dataset.
+
+        '
+      operationId: events_list
+      parameters:
+      - in: query
+        name: after
+        schema:
+          type: string
+          format: date-time
+        description: Only return events with a timestamp after this time.
+      - in: query
+        name: before
+        schema:
+          type: string
+          format: date-time
+        description: Only return events with a timestamp before this time.
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: distinct_id
+        schema:
+          type: integer
+        description: Filter list by distinct id.
+      - in: query
+        name: event
+        schema:
+          type: string
+        description: Filter list by event. For example `user sign up` or `$pageview`.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: The maximum number of results to return
+      - in: query
+        name: maskPii
+        schema:
+          type: boolean
+        description: If true, personally identifiable information is masked in the properties of returned events. A property is considered to contain PII if a retention period is set for it.
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: person_id
+        schema:
+          type: integer
+        description: Filter list by person id.
+      - in: query
+        name: properties
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+        description: Filter events by event property, person property, cohort, groups and more.
+      - in: query
+        name: select
+        schema:
+          type: array
+          items:
+            type: string
+        description: (Experimental) JSON-serialized array of PypeQL expressions to return
+      - in: query
+        name: where
+        schema:
+          type: array
+          items:
+            type: string
+        description: (Experimental) JSON-serialized array of PypeQL expressions that must pass
+      tags:
+      - Events
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClickhouseEventList'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/PaginatedClickhouseEventList'
+          description: ''
+  /api/datasets/{dataset_id}/events/{id}/:
+    get:
+      description: 'Events: Specific user actions (e.g., clicks, page views, form submissions, Pype escalations) or system  occurrences (e.g., Pype session started) captured by Analytics. They form the basis of most analyses.
+
+
+        Get a specific event from a specific dataset.
+
+        '
+      operationId: events_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: maskPii
+        schema:
+          type: boolean
+        description: If true, mask personally identifiable information in returned events.
+      tags:
+      - Events
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClickhouseEvent'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/ClickhouseEvent'
+          description: ''
+components:
+  schemas:
+    ClickhouseEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        distinct_id:
+          type: string
+          readOnly: true
+        properties:
+          type: string
+          readOnly: true
+        event:
+          type: string
+          readOnly: true
+        timestamp:
+          type: string
+          readOnly: true
+        person:
+          type: string
+          readOnly: true
+        elements:
+          type: string
+          readOnly: true
+        elements_chain:
+          type: string
+          readOnly: true
+      required:
+      - distinct_id
+      - elements
+      - elements_chain
+      - event
+      - id
+      - person
+      - properties
+      - timestamp
+    Property:
+      type: object
+      properties:
+        type:
+          enum:
+          - AND
+          - OR
+          type: string
+          default: AND
+          description: "\n You can use a simplified version:\n```json\n{\n    \"properties\": [\n        {\n            \"key\": \"email\",\n            \"value\": \"x@y.com\",\n            \"operator\": \"exact\",\n            \"type\": \"event\"\n        }\n    ]\n}\n```\n\nOr you can create more complicated queries with AND and OR:\n```json\n{\n    \"properties\": {\n        \"type\": \"AND\",\n        \"values\": [\n            {\n                \"type\": \"OR\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            },\n            {\n                \"type\": \"AND\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            }\n        ]\n    ]\n}\n```\n"
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyItem'
+      required:
+      - values
+    PropertyItem:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Key of the property you're filtering on. For example `email` or `$current_url`
+        value:
+          type: string
+          description: Value of your filter. For example `test@example.com` or `https://example.com/test/`. Can be an array for an OR query, like `["test@example.com","ok@example.com"]`
+        operator:
+          enum:
+          - exact
+          - is_not
+          - icontains
+          - not_icontains
+          - regex
+          - not_regex
+          - gt
+          - lt
+          - gte
+          - lte
+          - is_set
+          - is_not_set
+          - is_date_exact
+          - is_date_after
+          - is_date_before
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          default: exact
+        type:
+          enum:
+          - event
+          - person
+          - cohort
+          - element
+          - static-cohort
+          - precalculated-cohort
+          - group
+          - recording
+          - behavioral
+          - session
+          - pypeql
+          - ''
+          type: string
+          default: event
+      required:
+      - key
+      - value
+    PaginatedClickhouseEventList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClickhouseEvent'
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

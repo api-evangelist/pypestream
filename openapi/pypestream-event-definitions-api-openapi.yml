@@ -1,0 +1,238 @@
+openapi: 3.2.0
+info:
+  title: Analytics Event Definitions API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Event Definitions
+paths:
+  /api/datasets/{dataset_id}/event_definitions/:
+    get:
+      description: 'Definitions of events used in analytics.
+
+
+        Get a list of event definitions for a specific dataset.
+
+        '
+      operationId: event_definitions_list
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Event Definitions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEventDefinitionList'
+          description: ''
+  /api/datasets/{dataset_id}/event_definitions/{id}/:
+    get:
+      description: 'Definitions of events used in analytics.
+
+
+        Get a single event definition from a specific dataset.
+
+        '
+      operationId: event_definitions_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - Event Definitions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDefinition'
+          description: ''
+components:
+  schemas:
+    EventDefinition:
+      type: object
+      description: Serializer mixin that resolves appropriate response for tags depending on license.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 400
+        volume_30_day:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        query_usage_30_day:
+          type:
+          - integer
+          - 'null'
+          maximum: 2147483647
+          minimum: -2147483648
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        last_seen_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        last_updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        tags:
+          type: array
+          items: {}
+        is_action:
+          type: string
+          readOnly: true
+        action_id:
+          type: integer
+          readOnly: true
+        is_calculating:
+          type: boolean
+          readOnly: true
+        last_calculated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        post_to_slack:
+          type: boolean
+          default: false
+        description:
+          type:
+          - string
+          - 'null'
+      required:
+      - action_id
+      - created_by
+      - id
+      - is_action
+      - is_calculating
+      - last_calculated_at
+      - last_updated_at
+      - name
+    PaginatedEventDefinitionList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventDefinition'
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

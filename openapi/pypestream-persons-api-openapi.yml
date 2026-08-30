@@ -1,0 +1,279 @@
+openapi: 3.2.0
+info:
+  title: Analytics Persons API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Persons
+paths:
+  /api/datasets/{dataset_id}/persons/:
+    get:
+      description: 'Person / Persons: A feature within Data Management representing individual users tracked by Analytics.  The "Persons" list allows accessing detailed profiles for each user, showing their associated properties, event history, cohort memberships, and related replays.
+
+
+        Get a list of persons for a specific dataset.
+
+        '
+      operationId: persons_list
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: distinct_id
+        schema:
+          type: string
+        description: Filter list by distinct id.
+      - in: query
+        name: email
+        schema:
+          type: string
+        description: Filter persons by email (exact match)
+        examples:
+          Email:
+            value: test@test.com
+            summary: email
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: query
+        name: properties
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+        description: Filter Persons by person properties.
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Search persons, either by email (full text search) or distinct_id (exact match).
+      tags:
+      - Persons
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPersonList'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/PaginatedPersonList'
+          description: ''
+  /api/datasets/{dataset_id}/persons/{id}/:
+    get:
+      description: 'Person / Persons: A feature within Data Management representing individual users tracked by Analytics.  The "Persons" list allows accessing detailed profiles for each user, showing their associated properties, event history, cohort memberships, and related replays.
+
+
+        Get a specific person from a specific dataset.
+
+        '
+      operationId: persons_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - csv
+          - json
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this person.
+        required: true
+      tags:
+      - Persons
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Person'
+          description: ''
+components:
+  schemas:
+    Property:
+      type: object
+      properties:
+        type:
+          enum:
+          - AND
+          - OR
+          type: string
+          default: AND
+          description: "\n You can use a simplified version:\n```json\n{\n    \"properties\": [\n        {\n            \"key\": \"email\",\n            \"value\": \"x@y.com\",\n            \"operator\": \"exact\",\n            \"type\": \"event\"\n        }\n    ]\n}\n```\n\nOr you can create more complicated queries with AND and OR:\n```json\n{\n    \"properties\": {\n        \"type\": \"AND\",\n        \"values\": [\n            {\n                \"type\": \"OR\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            },\n            {\n                \"type\": \"AND\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            }\n        ]\n    ]\n}\n```\n"
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyItem'
+      required:
+      - values
+    PaginatedPersonList:
+      type: object
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
+        count:
+          type: integer
+          example: 400
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    Person:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        distinct_ids:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        properties:
+          type: object
+          additionalProperties: {}
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - created_at
+      - distinct_ids
+      - id
+      - name
+      - uuid
+    PropertyItem:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Key of the property you're filtering on. For example `email` or `$current_url`
+        value:
+          type: string
+          description: Value of your filter. For example `test@example.com` or `https://example.com/test/`. Can be an array for an OR query, like `["test@example.com","ok@example.com"]`
+        operator:
+          enum:
+          - exact
+          - is_not
+          - icontains
+          - not_icontains
+          - regex
+          - not_regex
+          - gt
+          - lt
+          - gte
+          - lte
+          - is_set
+          - is_not_set
+          - is_date_exact
+          - is_date_after
+          - is_date_before
+          - ''
+          - null
+          type:
+          - string
+          - 'null'
+          default: exact
+        type:
+          enum:
+          - event
+          - person
+          - cohort
+          - element
+          - static-cohort
+          - precalculated-cohort
+          - group
+          - recording
+          - behavioral
+          - session
+          - pypeql
+          - ''
+          type: string
+          default: event
+      required:
+      - key
+      - value
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

@@ -1,0 +1,180 @@
+openapi: 3.2.0
+info:
+  title: Reporting Agent API
+  description: Access automation, conversation and agent data in Pypestream..
+  version: '1.0'
+servers:
+- url: https://reporting.pypestream.com/api/v2/
+  description: Production Environement
+- url: https://reporting-sandbox.pypestream.com/api/v2/
+  description: Sandbox Environment
+tags:
+- name: Agent
+paths:
+  /single-agent/{agent_id}:
+    get:
+      summary: Single Agent
+      description: Retrieves specific agent information identified by the agent ID.
+      security:
+      - BasicAuth: []
+      parameters:
+      - description: The specific ID of the Agent to retrieve data for.
+        in: path
+        name: agent_id
+        required: true
+        schema:
+          example: 72c0c618-a365-4141-s9b4-1036e2f3d59d
+          type: string
+      - description: Timestamp in RFC3339 (YYYY-MM-DDTHH:MM:SSZ) format.
+        in: query
+        name: from
+        required: true
+        schema:
+          example: '2021-12-20T00:00:00Z'
+          type: string
+      - description: Timestamp in RFC3339 (YYYY-MM-DDTHH:MM:SSZ) format.
+        in: query
+        name: to
+        required: true
+        schema:
+          example: '2021-12-20T23:23:59Z'
+          type: string
+      responses:
+        '200':
+          description: Successful request with response body. If a request is for data over 30 days old, the response will be an empty array.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentObject'
+        '400':
+          description: Incomplete or invalid input or from and to is incorrectly formatted.
+        '401':
+          description: Unauthorized.
+        '403':
+          description: Requested date range is greater than the maximum.
+      tags:
+      - Agent
+  /multi-agent:
+    get:
+      summary: Multiple Agents
+      description: Retrieves agents' information between a specific 24-hour time frame.
+      security:
+      - BasicAuth: []
+      parameters:
+      - description: Timestamp in RFC3339 (YYYY-MM-DDTHH:MM:SSZ) format.
+        in: query
+        name: from
+        required: true
+        schema:
+          example: '2021-12-20T00:00:00Z'
+          type: string
+      - description: Timestamp in RFC3339 (YYYY-MM-DDTHH:MM:SSZ) format.
+        in: query
+        name: to
+        required: true
+        schema:
+          example: '2021-12-20T23:23:59Z'
+          type: string
+      responses:
+        '200':
+          description: Successful request with response body. If a request is for data over 30 days old, the response will be an empty array.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiAgentObject'
+        '400':
+          description: Incomplete or invalid input or from and to is incorrectly formatted.
+        '401':
+          description: Unauthorized.
+        '403':
+          description: Requested date range is greater than the maximum.
+      tags:
+      - Agent
+components:
+  schemas:
+    AgentObject:
+      type: object
+      properties:
+        agent_id:
+          type: string
+          example: 72c0c618-a365-4141-s9b4-1036e2f3d59d
+          description: ID of agent connected to Conversation.
+        agent_name:
+          type: string
+          example: Jane Doe
+          description: Name of agent connected to Conversation.
+        chats_assigned:
+          type: number
+          example: 10
+          description: Number of conversation assigned to the agent.
+        status_updates:
+          type: array
+          items:
+            type: object
+            properties:
+              new_status:
+                type: string
+                enum:
+                - online
+                - offline
+                - away
+                example: online
+                description: New agent status. The value can be online, away, busy, offline.
+              prev_status:
+                type: string
+                enum:
+                - online
+                - offline
+                - away
+                example: offline
+                description: Previous agent status. The value can be online, away, busy, offline.
+              ts:
+                type: string
+                example: '2020-04-20T18:45:36.000Z'
+                description: Agent status update timestamp in UTC time zone.
+      example:
+        agent_id: 72c0c608-a665-3144-99a4-2036e2f3d59d
+        agent_name: “Jane Doe”
+        chats_assigned: 10
+        status_updates:
+        - new_status: online
+          prev_status: offline
+          ts: '2020-04-20T18:45:36.000Z'
+        - new_status: away
+          prev_status: online
+          ts: '2020-04-20T18:45:40.000Z'
+        - new_status: online
+          prev_status: away
+          ts: '2020-04-20T18:45:47.000Z'
+    MultiAgentObject:
+      type: array
+      items:
+        $ref: '#/components/schemas/AgentObject'
+      example:
+      - agent_id: 72c0c608-a665-3144-99a4-2036e2f3d59d
+        agent_name: “Jane Doe”
+        chats_assigned: 10
+        status_updates:
+        - new_status: online
+          prev_status: offline
+          ts: '2020-04-20T18:45:36.000Z'
+        - new_status: away
+          prev_status: online
+          ts: '2020-04-20T18:45:40.000Z'
+        - new_status: online
+          prev_status: away
+          ts: '2020-04-20T18:45:47.000Z'
+      - agent_id: d269ed1b-1d3a-4b77-af09-40c278f2b939
+        agent_name: “Pete Smith”
+        chats_assigned: 7
+        status_updates:
+        - new_status: online
+          prev_status: offline
+          ts: '2020-04-20T19:45:03.000Z'
+        - new_status: away
+          prev_status: online
+          ts: '2020-04-20T19:45:06.000Z'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

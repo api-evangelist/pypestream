@@ -1,0 +1,212 @@
+openapi: 3.2.0
+info:
+  title: Analytics Projects API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Projects
+paths:
+  /api/projects/:
+    get:
+      description: 'Project: A container within a Pypestream Organization used to group related solutions, analytics data,  and settings. Users select the Project they want to work within via the Project Selector.
+
+
+        Get a list of projects.
+
+        '
+      operationId: list_2
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Projects
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProjectList'
+          description: ''
+  /api/projects/{id}/:
+    get:
+      description: 'Project: A container within a Pypestream Organization used to group related solutions, analytics data,  and settings. Users select the Project they want to work within via the Project Selector.
+
+
+        Get a specific project by ID.
+
+        '
+      operationId: retrieve_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this project.
+        required: true
+      tags:
+      - Projects
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+components:
+  schemas:
+    PaginatedProjectList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        membership_level:
+          enum:
+          - 1
+          - 8
+          - 15
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+        plugins_access_level:
+          enum:
+          - 0
+          - 3
+          - 6
+          - 9
+          type: integer
+          readOnly: true
+        teams:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        available_features:
+          type: array
+          items:
+            type: string
+            maxLength: 64
+          readOnly: true
+        available_product_features:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
+        is_member_join_email_enabled:
+          type: boolean
+        metadata:
+          type: string
+          readOnly: true
+        customer_id:
+          type:
+          - string
+          - 'null'
+          readOnly: true
+        enforce_2fa:
+          type:
+          - boolean
+          - 'null'
+          readOnly: true
+      required:
+      - available_features
+      - available_product_features
+      - created_at
+      - customer_id
+      - enforce_2fa
+      - id
+      - Membership_level
+      - metadata
+      - name
+      - Plugins_access_level
+      - slug
+      - teams
+      - updated_at
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

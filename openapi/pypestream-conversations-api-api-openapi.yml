@@ -1,0 +1,522 @@
+openapi: 3.2.0
+info:
+  title: Pypestream Conversations API
+  version: 1.0.1
+  contact:
+    email: support@pypestream.com
+  termsOfService: https://www.pypestream.com/privacy-policy/
+  description: 'Operations tagged Conversations API across 2 of this provider''s published API definitions: pypestream-contact-center-api-openapi.json, pypestream-middleware-api-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://middleware.pypestream.com/
+  description: Live
+- url: http://middleware-sandbox.pypestream.com/
+  description: Sandbox
+security: []
+tags:
+- description: Use the Conversation API after the escalate request
+  name: Conversations API
+paths:
+  /contactCenter/v1/conversations/{conversationId}/end:
+    post:
+      callbacks: {}
+      deprecated: false
+      operationId: sendEnd
+      parameters:
+      - description: Uniquely identify the chat conversation.
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/End'
+        description: End conversation object that needs to be sent
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - TokenHeader: []
+      - BasicAuth: []
+      summary: End Chat
+      description: Use this request to end a chat.
+      tags:
+      - Conversations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+  /contactCenter/v2/conversations/{conversationId}/history:
+    get:
+      callbacks: {}
+      deprecated: false
+      operationId: conversationHistory
+      parameters:
+      - description: The Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: The page number. Default to 1 (Optional)
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: The page size. Default to 10 (Optional)
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/History'
+          description: Successful request with response body.
+      security:
+      - BasicAuth: []
+      summary: Retrieve Conversation History
+      description: This method returns the conversation history between the automation and the end-user.
+      tags:
+      - Conversations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+  /contactCenter/v1/conversations/{conversationId}/messages/{messageId}:
+    put:
+      callbacks: {}
+      deprecated: false
+      operationId: sendMessage
+      parameters:
+      - description: Uniquely identify the chat conversation.
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: Unique identifier for a message. MessageIDs must be unique to avoid duplicating messages.
+        in: path
+        name: messageId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+        description: Message object that needs to be sent
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - TokenHeader: []
+      - BasicAuth: []
+      summary: Send Message
+      description: Use this method to send a message to an agent or an end-user.
+      tags:
+      - Conversations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+  /contactCenter/v1/conversations/{conversationId}/metadata:
+    get:
+      callbacks: {}
+      deprecated: false
+      operationId: getMetadata
+      parameters:
+      - description: The Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metadata'
+          description: Successful operation
+      security:
+      - BasicAuth: []
+      summary: Retrieve Metadata
+      description: This method returns users metadata.
+      tags:
+      - Conversations API
+    patch:
+      callbacks: {}
+      deprecated: false
+      operationId: updateMetadata
+      parameters:
+      - description: The Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentMetadata'
+        description: Metadata object that needs to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metadata'
+          description: Successful operation
+      security:
+      - BasicAuth: []
+      summary: Update Metadata
+      description: This method enables to update the users metadata, on the agent side.
+      tags:
+      - Conversations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+  /contactCenter/v1/conversations/{conversationId}/type:
+    post:
+      callbacks: {}
+      deprecated: false
+      operationId: sendTypingIndicator
+      parameters:
+      - description: Uniquely identify the chat conversation.
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Typing'
+        description: Typing Indicator object that needs to be sent
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+          description: Bad request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalError'
+          description: Internal Error
+      security:
+      - TokenHeader: []
+      - BasicAuth: []
+      summary: Send Typing Status
+      description: This method sets the user's typing status.
+      tags:
+      - Conversations API
+    servers:
+    - url: http://middleware.pypestream.com/
+      description: Live
+    - url: http://middleware-sandbox.pypestream.com/
+      description: Sandbox
+  /contactCenter/v1/conversations/{conversationId}/history:
+    get:
+      callbacks: {}
+      deprecated: false
+      operationId: conversationHistory
+      parameters:
+      - description: The Conversation ID
+        in: path
+        name: conversationId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: The page number. Default to 1 (Optional)
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+      - description: The page size. Default to 10 (Optional)
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/History'
+          description: Successful operation
+      security:
+      - TokenHeader: []
+      - BasicAuth: []
+      summary: Get the chat conversation history
+      tags:
+      - Conversations API
+components:
+  schemas:
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
+    AgentMetadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+      required:
+      - agent
+      type: object
+    End:
+      properties:
+        senderId:
+          format: uuid
+          type: string
+      required:
+      - senderId
+      type: object
+    Metadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+        bot:
+          description: The metadata values saved on microapp side
+          properties: {}
+          type: object
+        user:
+          description: The metadata values saved on user side
+          properties: {}
+          type: object
+      required:
+      - agent
+      - bot
+      - user
+      type: object
+    MessageSent:
+      properties:
+        content:
+          type: string
+        id:
+          type: string
+        senderId:
+          description: The user or agent ID
+          format: uuid
+          type: string
+        sentDate:
+          format: date-time
+          type: string
+        side:
+          description: The type of user sending the message (agent or user)
+          type: string
+      required:
+      - id
+      - content
+      - senderId
+      - side
+      - sentDate
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    Message:
+      properties:
+        content:
+          type: string
+        senderId:
+          description: The user or agent ID
+          format: uuid
+          type: string
+        side:
+          description: The type of user sending the message (agent or user)
+          type: string
+      required:
+      - content
+      - senderId
+      - side
+      type: object
+    Typing:
+      properties:
+        typing:
+          type: boolean
+      required:
+      - typing
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+    History:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/MessageSent'
+          type: array
+        pagination:
+          properties:
+            page:
+              type: integer
+            totalPages:
+              type: integer
+          required:
+          - page
+          - totalPages
+          type: object
+      required:
+      - pagination
+      - messages
+      type: object
+    MessageSent_2:
+      properties:
+        content:
+          type: string
+        id:
+          type: string
+        senderId:
+          description: The user or agent ID
+          format: uuid
+          type: string
+        sentDate:
+          format: date-time
+          type: string
+        side:
+          description: Who is sending the message (agent or user)
+          type: string
+      required:
+      - id
+      - content
+      - senderId
+      - side
+      - sentDate
+      type: object
+    Message_2:
+      properties:
+        content:
+          type: string
+        senderId:
+          description: The user or agent ID
+          format: uuid
+          type: string
+        side:
+          description: Who is sending the message (agent or user)
+          type: string
+      required:
+      - content
+      - senderId
+      - side
+      type: object
+  securitySchemes:
+    BasicAuth:
+      scheme: basic
+      type: http
+    TokenHeader:
+      in: header
+      name: X-Pypestream-Token
+      type: apiKey
+x-refined-from:
+- pypestream-contact-center-api-openapi.json
+- pypestream-middleware-api-openapi.json
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

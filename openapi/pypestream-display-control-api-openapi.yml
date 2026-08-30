@@ -1,0 +1,231 @@
+openapi: 3.2.0
+info:
+  title: Pypestream JavaScript SDK Display Control API
+  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  version: 3.0.0
+  contact:
+    name: Pypestream Support
+    url: https://support.pypestream.com
+  license:
+    name: Proprietary
+    url: https://pypestream.com/terms
+servers:
+- url: https://api.pypestream.com/v3
+  description: Production SDK API (Documentation Only)
+security: []
+tags:
+- name: Display Control
+  description: Control chat visibility
+paths:
+  /show:
+    post:
+      tags:
+      - Display Control
+      summary: Show chat interface
+      description: 'Shows the chat interface in inline mode only.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.show();
+
+        ```
+
+
+        **Requirements:**
+
+        - Must call `boot()` first
+
+        - Only works in ''inline'' display mode
+
+        - Triggers `onShow` event handlers
+
+        '
+      operationId: show
+      responses:
+        '200':
+          description: Chat interface shown successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  isShowing:
+                    type: boolean
+                    example: true
+        '400':
+          description: Cannot show chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                notBooted:
+                  value:
+                    error: Not initialized
+                    message: You must call Pypestream.boot() before 'show'
+                windowMode:
+                  value:
+                    error: Invalid display mode
+                    message: Cannot show chat in display mode 'window'
+  /hide:
+    post:
+      tags:
+      - Display Control
+      summary: Hide chat interface
+      description: 'Hides the chat interface in inline mode only.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.hide();
+
+        ```
+
+
+        **Requirements:**
+
+        - Must call `boot()` first
+
+        - Only works in ''inline'' display mode
+
+        - Triggers `onHide` event handlers
+
+        '
+      operationId: hide
+      responses:
+        '200':
+          description: Chat interface hidden successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  isShowing:
+                    type: boolean
+                    example: false
+        '400':
+          description: Cannot hide chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /toggle:
+    post:
+      tags:
+      - Display Control
+      summary: Toggle chat visibility
+      description: 'Toggles the chat interface visibility in inline mode.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.toggle();
+
+        ```
+
+
+        **Behavior:**
+
+        - Shows chat if currently hidden
+
+        - Hides chat if currently showing
+
+        - Only works in ''inline'' display mode
+
+        '
+      operationId: toggle
+      responses:
+        '200':
+          description: Chat visibility toggled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  isShowing:
+                    type: boolean
+                    example: true
+        '400':
+          description: Cannot toggle chat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /isVisible:
+    get:
+      tags:
+      - Display Control
+      summary: Check visibility state
+      description: 'Returns the current visibility state of the chat interface.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        const isVisible = Pypestream.isVisible();
+
+        ```
+
+        '
+      operationId: isVisible
+      responses:
+        '200':
+          description: Current visibility state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isVisible:
+                    type: boolean
+                    example: true
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: Configuration Error
+        message:
+          type: string
+          description: Detailed error message
+          example: You must provide an APP_ID string in the config object
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: 'API key for accessing Pypestream services (if applicable).
+
+        Note: The JavaScript SDK does not require API keys for client-side usage.
+
+        '
+externalDocs:
+  description: Full Pypestream Documentation
+  url: https://docs.pypestream.com

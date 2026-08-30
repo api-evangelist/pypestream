@@ -1,0 +1,174 @@
+openapi: 3.2.0
+info:
+  title: Analytics Datasets API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: Datasets
+paths:
+  /api/datasets/:
+    get:
+      description: 'Dataset: A distinct collection of analytics data, typically corresponding to an environment  (e.g., "Production", "Testing", "Development").
+
+
+        Get a list of datasets that you have access to.
+
+        '
+      operationId: list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - Datasets
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTeamBasicList'
+          description: ''
+  /api/datasets/{id}/:
+    get:
+      operationId: retrieve
+      description: "Dataset: A distinct collection of analytics data, typically corresponding to an environment \n        (e.g., \"Production\", \"Testing\", \"Development\").\n\nGet a specific dataset by ID.\n"
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        description: id|uuid
+        required: true
+        examples:
+          Id:
+            value: \d+
+            summary: id
+          Uuid:
+            value: '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
+            summary: uuid
+      tags:
+      - Datasets
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamBasic'
+          description: ''
+components:
+  schemas:
+    PaginatedTeamBasicList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamBasic'
+    TeamBasic:
+      type: object
+      description: 'Serializer for `Team` model with minimal attributes to speeed up loading and transfer times.
+
+        Also used for nested serializers.'
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        project:
+          type: string
+          format: uuid
+          readOnly: true
+        api_token:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        completed_snippet_onboarding:
+          type: boolean
+          readOnly: true
+        ingested_event:
+          type: boolean
+          readOnly: true
+        is_demo:
+          type: boolean
+          readOnly: true
+        timezone:
+          type: string
+          readOnly: true
+        access_control:
+          type: boolean
+          readOnly: true
+      required:
+      - access_control
+      - api_token
+      - completed_snippet_onboarding
+      - id
+      - ingested_event
+      - is_demo
+      - name
+      - project
+      - timezone
+      - uuid
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table

@@ -1,0 +1,192 @@
+openapi: 3.2.0
+info:
+  title: Analytics KP Is API
+  version: 1.0.0
+  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+servers:
+- url: https://analytics.pypestream.com/
+  description: Production server US
+security:
+- APIKey: []
+tags:
+- name: KPIs
+paths:
+  /api/datasets/{dataset_id}/kpis/:
+    get:
+      description: 'Get a list of KPIs for a specific dataset.
+
+        '
+      operationId: kpis_list
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - KPIs
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedKPIList'
+          description: ''
+  /api/datasets/{dataset_id}/kpis/{id}/:
+    get:
+      description: 'Get a specific KPI from a specific dataset.
+
+        '
+      operationId: kpis_retrieve
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: Dataset ID of the dataset you're trying to access. To find the ID of the dataset, make a call to /api/datasets/.
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this kpi.
+        required: true
+      tags:
+      - KPIs
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KPI'
+          description: ''
+components:
+  schemas:
+    KPI:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Human-readable name of the KPI
+          maxLength: 400
+        kpi_row:
+          type: integer
+          description: The dashboard tile associated with this KPI
+        insight:
+          type: integer
+          description: The insight that powers this KPI's calculations
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          default: 0
+          description: Position of this KPI within its row
+        trend:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when this KPI was created
+        last_updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when this KPI was last updated
+        created_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: User who created this KPI
+        last_updated_by:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: User who last updated this KPI
+      required:
+      - created_at
+      - created_by
+      - id
+      - insight
+      - kpi_row
+      - last_updated_at
+      - last_updated_by
+      - name
+      - Trend
+    PaginatedKPIList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/KPI'
+  securitySchemes:
+    APIKey:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: All endpoints
+  tags:
+  - Actions
+  - Annotations
+  - Batch Exports
+  - Change
+  - Cohorts
+  - Dashboards
+  - Datasets
+  - Domains
+  - Event Definitions
+  - Events
+  - Funnel
+  - Insights
+  - KPIs
+  - Members
+  - Organization
+  - Persons
+  - Projects
+  - Property Definitions
+  - Query
+  - Tags
+  - Trend
+  - Users
+  - Warehouse Table
