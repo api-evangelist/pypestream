@@ -99,6 +99,8 @@ apis:
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
+  - Agents
+  tags_raw:
   - Agent
   properties:
   - type: OpenAPI
@@ -314,7 +316,8 @@ apis:
   description: API to be consumed by the 3rd party apps.
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
-  tags:
+  tags: []
+  tags_raw:
   - Endpoints
   properties:
   - type: OpenAPI
@@ -339,6 +342,8 @@ apis:
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
+  - EventDefinitions
+  tags_raw:
   - Event Definitions
   properties:
   - type: OpenAPI
@@ -387,6 +392,8 @@ apis:
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -579,6 +586,8 @@ apis:
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -675,6 +684,8 @@ apis:
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
+  - transcript
+  tags_raw:
   - Transcript
   properties:
   - type: OpenAPI

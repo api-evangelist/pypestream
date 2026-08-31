@@ -1,0 +1,14 @@
+{
+  "repo": "pypestream",
+  "feeds": [
+    {
+      "source": "https://support.pypestream.com/",
+      "feed_url": "https://support.pypestream.com/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-30T22:33:40Z"
+}
