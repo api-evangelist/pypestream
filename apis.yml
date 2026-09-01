@@ -684,7 +684,7 @@ apis:
   humanURL: https://developers.pypestream.com/reference/reporting-api-overview
   baseURL: https://reporting.pypestream.com/api/v2/
   tags:
-  - transcript
+  - Transcript
   tags_raw:
   - Transcript
   properties:
