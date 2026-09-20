@@ -3,9 +3,12 @@
   "feeds": [
     {
       "source": "https://support.pypestream.com/",
-      "error": "HTTPError"
+      "feed_url": "https://support.pypestream.com/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
   "post_count": 0,
-  "fetched": "2026-09-13T13:00:00Z"
+  "fetched": "2026-09-19T20:17:39Z"
 }
