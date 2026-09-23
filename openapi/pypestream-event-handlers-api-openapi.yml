@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Pypestream JavaScript SDK Event Handlers API
-  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  description: Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.
   version: 3.0.0
   contact:
     name: Pypestream Support
@@ -22,7 +22,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onShow handler
-      description: "Registers a callback for when the chat interface is shown.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onShow(() => {\n  console.log('Chat opened');\n});\n```\n"
+      description: 'Registers a callback for when the chat interface is shown.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onShow(() => {
+
+        console.log(''Chat opened'');
+
+        });
+
+        ```'
       operationId: onShow
       requestBody:
         required: true
@@ -42,7 +55,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onHide handler
-      description: "Registers a callback for when the chat interface is hidden.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onHide(() => {\n  console.log('Chat closed');\n});\n```\n"
+      description: 'Registers a callback for when the chat interface is hidden.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onHide(() => {
+
+        console.log(''Chat closed'');
+
+        });
+
+        ```'
       operationId: onHide
       requestBody:
         required: true
@@ -62,7 +88,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onChatEnd handler
-      description: "Registers a callback for when a chat session ends.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onChatEnd(() => {\n  console.log('Chat session ended');\n});\n```\n"
+      description: 'Registers a callback for when a chat session ends.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onChatEnd(() => {
+
+        console.log(''Chat session ended'');
+
+        });
+
+        ```'
       operationId: onChatEnd
       requestBody:
         required: true
@@ -82,7 +121,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onChatRestart handler
-      description: "Registers a callback for when a chat session is restarted.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onChatRestart(() => {\n  console.log('Chat restarted');\n});\n```\n"
+      description: 'Registers a callback for when a chat session is restarted.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onChatRestart(() => {
+
+        console.log(''Chat restarted'');
+
+        });
+
+        ```'
       operationId: onChatRestart
       requestBody:
         required: true
@@ -102,7 +154,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onSetupComplete handler
-      description: "Registers a callback for when initial setup completes.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onSetupComplete(() => {\n  console.log('Setup complete');\n});\n```\n"
+      description: 'Registers a callback for when initial setup completes.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onSetupComplete(() => {
+
+        console.log(''Setup complete'');
+
+        });
+
+        ```'
       operationId: onSetupComplete
       requestBody:
         required: true
@@ -122,7 +187,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onFirstMessage handler
-      description: "Registers a callback for when the first message is received.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onFirstMessage(() => {\n  console.log('First message received');\n});\n```\n"
+      description: 'Registers a callback for when the first message is received.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onFirstMessage(() => {
+
+        console.log(''First message received'');
+
+        });
+
+        ```'
       operationId: onFirstMessage
       requestBody:
         required: true
@@ -142,7 +220,20 @@ paths:
       tags:
       - Event Handlers
       summary: Register onMount handler
-      description: "Registers a callback for when the app iframe is mounted in the DOM.\n\n**JavaScript Usage:**\n```javascript\nPypestream.onMount(() => {\n  console.log('Iframe mounted');\n});\n```\n"
+      description: 'Registers a callback for when the app iframe is mounted in the DOM.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.onMount(() => {
+
+        console.log(''Iframe mounted'');
+
+        });
+
+        ```'
       operationId: onMount
       requestBody:
         required: true
@@ -159,15 +250,6 @@ paths:
                 $ref: '#/components/schemas/EventRegistrationResponse'
 components:
   schemas:
-    EventHandler:
-      type: object
-      required:
-      - handler
-      properties:
-        handler:
-          type: string
-          description: JavaScript function name or reference
-          example: myHandlerFunction
     EventRegistrationResponse:
       type: object
       properties:
@@ -180,6 +262,15 @@ components:
         message:
           type: string
           example: Event handler registered successfully
+    EventHandler:
+      type: object
+      required:
+      - handler
+      properties:
+        handler:
+          type: string
+          description: JavaScript function name or reference
+          example: myHandlerFunction
   securitySchemes:
     ApiKey:
       type: apiKey

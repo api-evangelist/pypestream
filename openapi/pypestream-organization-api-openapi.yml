@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Analytics Organization API
   version: 1.0.0
-  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+  description: To acquire a personal access token go to Account settings and create a new token or use an existing one
 servers:
 - url: https://analytics.pypestream.com/
   description: Production server US
@@ -13,12 +13,10 @@ tags:
 paths:
   /api/organization/:
     get:
-      description: 'Organization: The top-level entity within the Pypestream platform structure. An organization can contain  multiple Projects. Access might be switched via an Organization Selector.
+      description: 'Organization: The top-level entity within the Pypestream platform structure. An organization can contain multiple Projects. Access might be switched via an Organization Selector.
 
 
-        Get a list of organizations.
-
-        '
+        Get a list of organizations.'
       operationId: organization_list
       parameters:
       - name: limit
@@ -42,14 +40,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedOrganizationList'
           description: ''
+      summary: Organization list
+      x-summary-source: derived
   /api/organization/{id}/:
     get:
-      description: 'Organization: The top-level entity within the Pypestream platform structure. An organization can contain  multiple Projects. Access might be switched via an Organization Selector.
+      description: 'Organization: The top-level entity within the Pypestream platform structure. An organization can contain multiple Projects. Access might be switched via an Organization Selector.
 
 
-        Get a specific organization by ID.
-
-        '
+        Get a specific organization by ID.'
       operationId: organization_retrieve
       parameters:
       - in: path
@@ -68,6 +66,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Organization'
           description: ''
+      summary: Organization retrieve
+      x-summary-source: derived
 components:
   schemas:
     Organization:

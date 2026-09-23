@@ -54,6 +54,8 @@ paths:
           description: Duplicated entry
       tags:
       - Metadata
+      operationId: getSingleChatByChatId
+      x-operation-id-source: derived
   /multi-chat:
     get:
       summary: Multiple Sessions
@@ -104,8 +106,92 @@ paths:
           description: Duplicated entry
       tags:
       - Metadata
+      operationId: getMultiChat
+      x-operation-id-source: derived
 components:
   schemas:
+    MultiMetadataObject:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetadataObject'
+      example:
+      - agents:
+        - agent_assign_ts: '2019-01-01T02:37:04.000Z'
+          agent_msg_count: 30
+          agent_id: 0e403bea-2249-4fd1-b121-13f41d5820a9
+          agent_email: agent@test.com
+          agent_end_ts: '2020-03-26T08:44:16.000Z'
+          agent_name: Jane Doe
+          agent_response_ts: '2019-01-01T10:52:36.000Z'
+          end_tags:
+          - end_tag1
+          - end_tag2
+          skill: spanish_sales
+        all_end_comments:
+        - Ended as anonymous webchat user stopped heartbeating
+        - Offered a discount on next purchase
+        bots:
+        - bot_end_ts: '2019-01-01T17:05:44+00:00'
+          bot_id: Customer.Solution
+          bot_msg_count: 30
+          bot_start_ts: '2019-01-01T05:26:39+00:00'
+          bot_version: v6
+          convo_tags:
+          - tag1
+          - tag2
+          kill_reason: killbot_via_consumer_end
+          num_nodes: 28
+          user_traversal_path:
+          - -23999
+          - -15394
+          - -17762
+          - -6493
+          - -11329
+          - 29784
+          - 17923
+          - -26513
+          - -22023
+          - -11305
+          - 8026
+          - 19514
+          - 31554
+          - -7901
+          - 4394
+          - 23395
+          - -20982
+          - -22111
+          - 350
+          - 29628
+          - 28253
+          - -31511
+          - 18236
+          - -30396
+          - 13506
+          - 19194
+          - -19153
+          - 2961
+        chat_end_ts: '2019-01-01T01:06:38.000Z'
+        chat_start_ts: '2019-01-01T12:56:33.000Z'
+        consumer_msg_count: 15
+        consumer_name: Mary Smith
+        end_comment: Offered a discount on next purchase
+        flows:
+        - name: resetPassword
+          completed: false
+          start_ts: '2019-01-01T01:06:38+00:00'
+          complete_ts: null
+          time_to_completion: null
+        - name: checkAccountBalance
+          completed: true
+          start_ts: '2019-01-01T01:06:38+00:00'
+          complete_ts: '2019-01-01T01:06:39+00:00'
+          time_to_completion: 60000
+        id: 32a4a6d1-7e85-4cda-bb19-3f13d3d93798
+        pype_name: Company Name
+        stream_name: Support
+        survey_gateway: google_bm
+        survey_rating: VERY_SATISFIED
+        survey_ts: '2019-01-02T07:36:40.601Z'
     MetadataObject:
       type: object
       properties:
@@ -281,88 +367,6 @@ components:
           type: string
           description: Start time of the survey. For example `2020-05-27T07:36:40.601Z`.
           example: '2019-01-02T07:36:40.601Z'
-    MultiMetadataObject:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetadataObject'
-      example:
-      - agents:
-        - agent_assign_ts: '2019-01-01T02:37:04.000Z'
-          agent_msg_count: 30
-          agent_id: 0e403bea-2249-4fd1-b121-13f41d5820a9
-          agent_email: agent@test.com
-          agent_end_ts: '2020-03-26T08:44:16.000Z'
-          agent_name: Jane Doe
-          agent_response_ts: '2019-01-01T10:52:36.000Z'
-          end_tags:
-          - end_tag1
-          - end_tag2
-          skill: spanish_sales
-        all_end_comments:
-        - Ended as anonymous webchat user stopped heartbeating
-        - Offered a discount on next purchase
-        bots:
-        - bot_end_ts: '2019-01-01T17:05:44+00:00'
-          bot_id: Customer.Solution
-          bot_msg_count: 30
-          bot_start_ts: '2019-01-01T05:26:39+00:00'
-          bot_version: v6
-          convo_tags:
-          - tag1
-          - tag2
-          kill_reason: killbot_via_consumer_end
-          num_nodes: 28
-          user_traversal_path:
-          - -23999
-          - -15394
-          - -17762
-          - -6493
-          - -11329
-          - 29784
-          - 17923
-          - -26513
-          - -22023
-          - -11305
-          - 8026
-          - 19514
-          - 31554
-          - -7901
-          - 4394
-          - 23395
-          - -20982
-          - -22111
-          - 350
-          - 29628
-          - 28253
-          - -31511
-          - 18236
-          - -30396
-          - 13506
-          - 19194
-          - -19153
-          - 2961
-        chat_end_ts: '2019-01-01T01:06:38.000Z'
-        chat_start_ts: '2019-01-01T12:56:33.000Z'
-        consumer_msg_count: 15
-        consumer_name: Mary Smith
-        end_comment: Offered a discount on next purchase
-        flows:
-        - name: resetPassword
-          completed: false
-          start_ts: '2019-01-01T01:06:38+00:00'
-          complete_ts: null
-          time_to_completion: null
-        - name: checkAccountBalance
-          completed: true
-          start_ts: '2019-01-01T01:06:38+00:00'
-          complete_ts: '2019-01-01T01:06:39+00:00'
-          time_to_completion: 60000
-        id: 32a4a6d1-7e85-4cda-bb19-3f13d3d93798
-        pype_name: Company Name
-        stream_name: Support
-        survey_gateway: google_bm
-        survey_rating: VERY_SATISFIED
-        survey_ts: '2019-01-02T07:36:40.601Z'
   securitySchemes:
     BasicAuth:
       type: http

@@ -19,12 +19,10 @@ tags:
 paths:
   /api/datasets/{dataset_id}/insights/:
     get:
-      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
 
 
-        Get a list of insights for a specific dataset.
-
-        '
+        Get a list of insights for a specific dataset.'
       operationId: insights_list
       parameters:
       - in: query
@@ -74,17 +72,17 @@ paths:
           description: ''
       security:
       - APIKey: []
+      summary: Insights list
+      x-summary-source: derived
     servers:
     - url: https://analytics.pypestream.com/
       description: Production server US
   /api/datasets/{dataset_id}/insights/{id}/:
     get:
-      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
 
 
-        Get a specific insight from a specific dataset.
-
-        '
+        Get a specific insight from a specific dataset.'
       operationId: insights_retrieve
       parameters:
       - in: path
@@ -141,17 +139,17 @@ paths:
           description: ''
       security:
       - APIKey: []
+      summary: Insights retrieve
+      x-summary-source: derived
     servers:
     - url: https://analytics.pypestream.com/
       description: Production server US
   /api/datasets/{dataset_id}/insights/funnel/:
     get:
-      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
 
 
-        Get a funnel insight for a specific dataset.
-
-        '
+        Get a funnel insight for a specific dataset.'
       operationId: insights_funnel_retrieve
       parameters:
       - in: path
@@ -181,17 +179,17 @@ paths:
           description: ''
       security:
       - APIKey: []
+      summary: Insights funnel retrieve
+      x-summary-source: derived
     servers:
     - url: https://analytics.pypestream.com/
       description: Production server US
   /api/datasets/{dataset_id}/insights/path/:
     get:
-      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
 
 
-        Get a path insight for a specific dataset.
-
-        '
+        Get a path insight for a specific dataset.'
       operationId: insights_path_retrieve
       parameters:
       - in: path
@@ -221,17 +219,17 @@ paths:
           description: ''
       security:
       - APIKey: []
+      summary: Insights path retrieve
+      x-summary-source: derived
     servers:
     - url: https://analytics.pypestream.com/
       description: Production server US
   /api/datasets/{dataset_id}/insights/retention/:
     get:
-      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
 
 
-        Get a retention insight for a specific dataset.
-
-        '
+        Get a retention insight for a specific dataset.'
       operationId: insights_retention_retrieve
       parameters:
       - in: path
@@ -261,17 +259,17 @@ paths:
           description: ''
       security:
       - APIKey: []
+      summary: Insights retention retrieve
+      x-summary-source: derived
     servers:
     - url: https://analytics.pypestream.com/
       description: Production server US
   /api/datasets/{dataset_id}/insights/trend/:
     get:
-      description: 'Insights: The core analytical components within Analytics where users create specific analyses and  visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
+      description: 'Insights: The core analytical components within Analytics where users create specific analyses and visualizations from their data. Examples include Trends, Funnels, Retention, User Paths, Stickiness, Lifecycle, and SQL Insights.
 
 
-        Get a trend insight for a specific dataset.
-
-        '
+        Get a trend insight for a specific dataset.'
       operationId: insights_trend_retrieve
       parameters:
       - in: path
@@ -301,6 +299,8 @@ paths:
           description: ''
       security:
       - APIKey: []
+      summary: Insights trend retrieve
+      x-summary-source: derived
     servers:
     - url: https://analytics.pypestream.com/
       description: Production server US
@@ -405,6 +405,8 @@ paths:
                             - 10-04-21 00:59:59
       tags:
       - Insights
+      operationId: getInsights
+      x-operation-id-source: derived
     servers:
     - url: https://analytics-eight-eta.vercel.app/live/
       description: Live Deployed server.
@@ -416,37 +418,6 @@ paths:
       description: Local Sandbox Server for testing.
 components:
   schemas:
-    UserBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        distinct_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        first_name:
-          type: string
-          maxLength: 150
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 254
-        is_email_verified:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - email
-      - id
-      - uuid
     Insight:
       type: object
       description: Simplified serializer to speed response times when loading large amounts of objects.
@@ -604,22 +575,6 @@ components:
       - short_id
       - timezone
       - updated_at
-    DashboardTileBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        dashboard_id:
-          type: integer
-          readOnly: true
-        deleted:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - dashboard_id
-      - id
     PaginatedInsightList:
       type: object
       properties:
@@ -642,6 +597,53 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Insight'
+    DashboardTileBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dashboard_id:
+          type: integer
+          readOnly: true
+        deleted:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - dashboard_id
+      - id
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
   securitySchemes:
     APIKey:
       type: http

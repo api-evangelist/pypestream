@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Analytics Event Definitions API
   version: 1.0.0
-  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+  description: To acquire a personal access token go to Account settings and create a new token or use an existing one
 servers:
 - url: https://analytics.pypestream.com/
   description: Production server US
@@ -16,9 +16,7 @@ paths:
       description: 'Definitions of events used in analytics.
 
 
-        Get a list of event definitions for a specific dataset.
-
-        '
+        Get a list of event definitions for a specific dataset.'
       operationId: event_definitions_list
       parameters:
       - in: path
@@ -48,14 +46,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedEventDefinitionList'
           description: ''
+      summary: Event definitions list
+      x-summary-source: derived
   /api/datasets/{dataset_id}/event_definitions/{id}/:
     get:
       description: 'Definitions of events used in analytics.
 
 
-        Get a single event definition from a specific dataset.
-
-        '
+        Get a single event definition from a specific dataset.'
       operationId: event_definitions_retrieve
       parameters:
       - in: path
@@ -78,6 +76,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/EventDefinition'
           description: ''
+      summary: Event definitions retrieve
+      x-summary-source: derived
 components:
   schemas:
     EventDefinition:

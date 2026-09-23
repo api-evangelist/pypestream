@@ -310,6 +310,14 @@ paths:
       - Conversations API
 components:
   schemas:
+    End:
+      properties:
+        senderId:
+          format: uuid
+          type: string
+      required:
+      - senderId
+      type: object
     Error:
       properties:
         message:
@@ -322,77 +330,6 @@ components:
       - source
       - type
       - message
-      type: object
-    AgentMetadata:
-      properties:
-        agent:
-          description: The metadata values saved on agent side
-          properties: {}
-          type: object
-      required:
-      - agent
-      type: object
-    End:
-      properties:
-        senderId:
-          format: uuid
-          type: string
-      required:
-      - senderId
-      type: object
-    Metadata:
-      properties:
-        agent:
-          description: The metadata values saved on agent side
-          properties: {}
-          type: object
-        bot:
-          description: The metadata values saved on microapp side
-          properties: {}
-          type: object
-        user:
-          description: The metadata values saved on user side
-          properties: {}
-          type: object
-      required:
-      - agent
-      - bot
-      - user
-      type: object
-    MessageSent:
-      properties:
-        content:
-          type: string
-        id:
-          type: string
-        senderId:
-          description: The user or agent ID
-          format: uuid
-          type: string
-        sentDate:
-          format: date-time
-          type: string
-        side:
-          description: The type of user sending the message (agent or user)
-          type: string
-      required:
-      - id
-      - content
-      - senderId
-      - side
-      - sentDate
-      type: object
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
       type: object
     Message:
       properties:
@@ -417,12 +354,56 @@ components:
       required:
       - typing
       type: object
+    AgentMetadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+      required:
+      - agent
+      type: object
+    MessageSent:
+      properties:
+        content:
+          type: string
+        id:
+          type: string
+        senderId:
+          description: The user or agent ID
+          format: uuid
+          type: string
+        sentDate:
+          format: date-time
+          type: string
+        side:
+          description: The type of user sending the message (agent or user)
+          type: string
+      required:
+      - id
+      - content
+      - senderId
+      - side
+      - sentDate
+      type: object
     InternalError:
       properties:
         message:
           type: string
       required:
       - message
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
       type: object
     History:
       properties:
@@ -443,6 +424,41 @@ components:
       required:
       - pagination
       - messages
+      type: object
+    Metadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+        bot:
+          description: The metadata values saved on microapp side
+          properties: {}
+          type: object
+        user:
+          description: The metadata values saved on user side
+          properties: {}
+          type: object
+      required:
+      - agent
+      - bot
+      - user
+      type: object
+    Message_2:
+      properties:
+        content:
+          type: string
+        senderId:
+          description: The user or agent ID
+          format: uuid
+          type: string
+        side:
+          description: Who is sending the message (agent or user)
+          type: string
+      required:
+      - content
+      - senderId
+      - side
       type: object
     MessageSent_2:
       properties:
@@ -466,22 +482,6 @@ components:
       - senderId
       - side
       - sentDate
-      type: object
-    Message_2:
-      properties:
-        content:
-          type: string
-        senderId:
-          description: The user or agent ID
-          format: uuid
-          type: string
-        side:
-          description: Who is sending the message (agent or user)
-          type: string
-      required:
-      - content
-      - senderId
-      - side
       type: object
   securitySchemes:
     BasicAuth:

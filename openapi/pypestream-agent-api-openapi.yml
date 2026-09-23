@@ -54,6 +54,8 @@ paths:
           description: Requested date range is greater than the maximum.
       tags:
       - Agent
+      operationId: getSingleAgentByAgentId
+      x-operation-id-source: derived
   /multi-agent:
     get:
       summary: Multiple Agents
@@ -90,6 +92,8 @@ paths:
           description: Requested date range is greater than the maximum.
       tags:
       - Agent
+      operationId: getMultiAgent
+      x-operation-id-source: derived
 components:
   schemas:
     AgentObject:

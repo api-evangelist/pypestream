@@ -249,19 +249,6 @@ paths:
       description: Sandbox
 components:
   schemas:
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
-      type: object
     Integration:
       properties:
         callbackToken:
@@ -294,6 +281,33 @@ components:
       required:
       - integrations
       type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
+    IntegrationPatch:
+      properties:
+        callbackToken:
+          format: hash
+          type: string
+        callbackURL:
+          format: url
+          type: string
+        integrationFields:
+          properties: {}
+          type: object
+        integrationName:
+          type: string
+      type: object
     IntegrationCreate:
       properties:
         callbackToken:
@@ -313,6 +327,13 @@ components:
       - callbackURL
       - callbackToken
       type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
     BadRequest:
       properties:
         errors:
@@ -324,27 +345,6 @@ components:
       required:
       - message
       - errors
-      type: object
-    IntegrationPatch:
-      properties:
-        callbackToken:
-          format: hash
-          type: string
-        callbackURL:
-          format: url
-          type: string
-        integrationFields:
-          properties: {}
-          type: object
-        integrationName:
-          type: string
-      type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
       type: object
   securitySchemes:
     BasicAuth:

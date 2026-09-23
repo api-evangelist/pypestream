@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Analytics Annotations API
   version: 1.0.0
-  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+  description: To acquire a personal access token go to Account settings and create a new token or use an existing one
 servers:
 - url: https://analytics.pypestream.com/
   description: Production server US
@@ -16,9 +16,7 @@ paths:
       description: 'Annotations: Dated notes or comments attached to timelines or Insight charts to provide shared context about specific events (e.g., feature releases, marketing campaigns) that might influence metrics. Managed under Data Management and viewable on charts.
 
 
-        Get a list of annotations for a specific dataset.
-
-        '
+        Get a list of annotations for a specific dataset.'
       operationId: annotations_list
       parameters:
       - in: path
@@ -54,15 +52,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedAnnotationList'
           description: ''
+      summary: Annotations list
+      x-summary-source: derived
   /api/datasets/{dataset_id}/annotations/{id}/:
     get:
       operationId: annotations_retrieve
       description: 'Annotations: Dated notes or comments attached to timelines or Insight charts to provide shared context about specific events (e.g., feature releases, marketing campaigns) that might influence metrics. Managed under Data Management and viewable on charts.
 
 
-        Get a specific annotation from a specific dataset.
-
-        '
+        Get a specific annotation from a specific dataset.'
       parameters:
       - in: path
         name: dataset_id
@@ -85,8 +83,32 @@ paths:
               schema:
                 $ref: '#/components/schemas/Annotation'
           description: ''
+      summary: Annotations retrieve
+      x-summary-source: derived
 components:
   schemas:
+    PaginatedAnnotationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Annotation'
     UserBasic:
       type: object
       properties:
@@ -182,28 +204,6 @@ components:
       - insight_name
       - insight_short_id
       - updated_at
-    PaginatedAnnotationList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Annotation'
   securitySchemes:
     APIKey:
       type: http

@@ -365,84 +365,6 @@ paths:
       - Endpoints
 components:
   schemas:
-    Type:
-      type: object
-      required:
-      - chat_id
-      - from
-      - is_typing
-      - from_side
-      properties:
-        chat_id:
-          type: string
-          format: uuid
-          description: The 'chat_id' value obtained from the response of the 'Create User' method.
-        from:
-          type: string
-          format: uuid
-          description: The 'id' value obtained from the response of the 'Create User' method.
-        is_typing:
-          type: boolean
-          description: Set to 'true' if the end user is typing and 'false' otherwise.
-          example: true
-        from_side:
-          type: string
-          description: The side that originates the typing status request.
-          example: consumer
-    Ping:
-      type: object
-      required:
-      - user_id
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          description: The 'id' value obtained from the response of the 'Create User' method.
-        seq:
-          type: integer
-          description: An incremental integer that will be the same in the pong response. This helps in tracking the correspondence between ping and pong messages.
-          example: 1
-    EndChat:
-      properties:
-        ended_by:
-          description: The ID of the user that ended the engagement
-          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
-          type: string
-        pype_id:
-          description: The 'web_chat_pype_id' received with the Create User response
-          type: string
-        source:
-          description: Source of the end engagement request (client or server)
-          example: client
-          type: string
-        user_id:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-        version:
-          description: API version
-          example: '1'
-          type: string
-      required:
-      - pype_id
-      - user_id
-      - ended_by
-      - source
-      - version
-      type: object
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
-      type: object
     SnapshotResponse:
       properties:
         consumer_type:
@@ -624,30 +546,6 @@ components:
       - id
       - history
       type: object
-    PreconditionRequired:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    ExistingActiveConversation:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
     AnonymousSessionResponse:
       properties:
         access_token:
@@ -730,7 +628,89 @@ components:
       - web_chat_pype_id
       - web_chat_stream_id
       type: object
-    NotFound:
+    Pong:
+      type: object
+      required:
+      - chat_id
+      - user_id
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          description: The 'id' of the chat
+        user_id:
+          type: string
+          format: uuid
+          description: The 'id' received with the Create User response
+        seq:
+          type: integer
+          description: Incremental integer, will be the same on Ping response
+          example: 1
+    Type:
+      type: object
+      required:
+      - chat_id
+      - from
+      - is_typing
+      - from_side
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          description: The 'chat_id' value obtained from the response of the 'Create User' method.
+        from:
+          type: string
+          format: uuid
+          description: The 'id' value obtained from the response of the 'Create User' method.
+        is_typing:
+          type: boolean
+          description: Set to 'true' if the end user is typing and 'false' otherwise.
+          example: true
+        from_side:
+          type: string
+          description: The side that originates the typing status request.
+          example: consumer
+    PreconditionRequired:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    EndChat:
+      properties:
+        ended_by:
+          description: The ID of the user that ended the engagement
+          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
+          type: string
+        pype_id:
+          description: The 'web_chat_pype_id' received with the Create User response
+          type: string
+        source:
+          description: Source of the end engagement request (client or server)
+          example: client
+          type: string
+        user_id:
+          description: The 'id' received with the Create User response
+          format: uuid
+          type: string
+        version:
+          description: API version
+          example: '1'
+          type: string
+      required:
+      - pype_id
+      - user_id
+      - ended_by
+      - source
+      - version
+      type: object
+    ExistingActiveConversation:
       properties:
         errors:
           items:
@@ -751,7 +731,7 @@ components:
       required:
       - from
       type: object
-    BadRequest:
+    NotFound:
       properties:
         errors:
           items:
@@ -762,6 +742,19 @@ components:
       required:
       - message
       - errors
+      type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
       type: object
     SendMessage:
       properties:
@@ -828,6 +821,72 @@ components:
       - version
       - gateway
       type: object
+    Ping:
+      type: object
+      required:
+      - user_id
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: The 'id' value obtained from the response of the 'Create User' method.
+        seq:
+          type: integer
+          description: An incremental integer that will be the same in the pong response. This helps in tracking the correspondence between ping and pong messages.
+          example: 1
+    StartChat:
+      properties:
+        app_id:
+          description: The 'app_id' sent when creating a user
+          format: uuid
+          type: string
+        consumer:
+          description: The ID of the consumer.
+          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
+          type: string
+        gateway:
+          description: 'Platform used by the client app. Possible value(s): pypestream_widget'
+          example: pypestream_widget
+          type: string
+        stream_id:
+          description: The 'web_chat_stream_id' received with the Create User response.
+          format: uuid
+          type: string
+        user_id:
+          description: The 'id' received with the Create User response.
+          format: uuid
+          type: string
+        version:
+          description: API version
+          example: '1'
+          type: string
+      required:
+      - app_id
+      - stream_id
+      - user_id
+      - consumer
+      - version
+      - gateway
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
     AnonymousSession:
       properties:
         app_id:
@@ -891,65 +950,6 @@ components:
       - browser_language
       - referring_site
       - user_browser
-      type: object
-    StartChat:
-      properties:
-        app_id:
-          description: The 'app_id' sent when creating a user
-          format: uuid
-          type: string
-        consumer:
-          description: The ID of the consumer.
-          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
-          type: string
-        gateway:
-          description: 'Platform used by the client app. Possible value(s): pypestream_widget'
-          example: pypestream_widget
-          type: string
-        stream_id:
-          description: The 'web_chat_stream_id' received with the Create User response.
-          format: uuid
-          type: string
-        user_id:
-          description: The 'id' received with the Create User response.
-          format: uuid
-          type: string
-        version:
-          description: API version
-          example: '1'
-          type: string
-      required:
-      - app_id
-      - stream_id
-      - user_id
-      - consumer
-      - version
-      - gateway
-      type: object
-    Pong:
-      type: object
-      required:
-      - chat_id
-      - user_id
-      properties:
-        chat_id:
-          type: string
-          format: uuid
-          description: The 'id' of the chat
-        user_id:
-          type: string
-          format: uuid
-          description: The 'id' received with the Create User response
-        seq:
-          type: integer
-          description: Incremental integer, will be the same on Ping response
-          example: 1
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
       type: object
   securitySchemes:
     BearerAuth:

@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Pypestream JavaScript SDK Advanced API
-  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  description: Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.
   version: 3.0.0
   contact:
     name: Pypestream Support
@@ -22,7 +22,32 @@ paths:
       tags:
       - Advanced
       summary: Register custom events
-      description: "Registers custom event listeners for advanced integration scenarios.\n\n**JavaScript Usage:**\n```javascript\nPypestream.registerForEvents(\n  {\n    'CUSTOM_EVENT': (data) => {\n      console.log('Custom event:', data);\n    }\n  },\n  'myEventTarget',\n  true\n);\n```\n"
+      description: 'Registers custom event listeners for advanced integration scenarios.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.registerForEvents(
+
+        {
+
+        ''CUSTOM_EVENT'': (data) => {
+
+        console.log(''Custom event:'', data);
+
+        }
+
+        },
+
+        ''myEventTarget'',
+
+        true
+
+        );
+
+        ```'
       operationId: registerForEvents
       requestBody:
         required: true

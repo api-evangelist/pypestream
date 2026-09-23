@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Analytics Property Definitions API
   version: 1.0.0
-  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+  description: To acquire a personal access token go to Account settings and create a new token or use an existing one
 servers:
 - url: https://analytics.pypestream.com/
   description: Production server US
@@ -13,12 +13,10 @@ tags:
 paths:
   /api/datasets/{dataset_id}/property_definitions/:
     get:
-      description: 'Property Definitions: Metadata about the properties associated with events, persons, or groups in Analytics.  Property definitions provide context and details about the attributes tracked, such as data type, usage frequency, and whether they are numerical.
+      description: 'Property Definitions: Metadata about the properties associated with events, persons, or groups in Analytics. Property definitions provide context and details about the attributes tracked, such as data type, usage frequency, and whether they are numerical.
 
 
-        Get a list of property definitions for a specific dataset.
-
-        '
+        Get a list of property definitions for a specific dataset.'
       operationId: property_definitions_retrieve
       parameters:
       - in: path
@@ -92,14 +90,14 @@ paths:
       responses:
         '200':
           description: No response body
+      summary: Property definitions retrieve
+      x-summary-source: derived
   /api/datasets/{dataset_id}/property_definitions/{id}/:
     get:
-      description: 'Property Definitions: Metadata about the properties associated with events, persons, or groups in Analytics.  Property definitions provide context and details about the attributes tracked, such as data type, usage frequency, and whether they are numerical.
+      description: 'Property Definitions: Metadata about the properties associated with events, persons, or groups in Analytics. Property definitions provide context and details about the attributes tracked, such as data type, usage frequency, and whether they are numerical.
 
 
-        Get a specific property definition from a specific dataset.
-
-        '
+        Get a specific property definition from a specific dataset.'
       operationId: property_definitions_retrieve_2
       parameters:
       - in: path
@@ -118,6 +116,8 @@ paths:
       responses:
         '200':
           description: No response body
+      summary: Property definitions retrieve 2
+      x-summary-source: derived
 components:
   securitySchemes:
     APIKey:

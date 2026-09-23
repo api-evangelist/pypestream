@@ -47,6 +47,8 @@ paths:
           description: Duplicated entry
       tags:
       - Transcript
+      operationId: getSingleChatTranscriptByChatId
+      x-operation-id-source: derived
   /multi-chat-transcript:
     get:
       summary: Multiple Transcripts
@@ -107,6 +109,8 @@ paths:
           description: Duplicated entry
       tags:
       - Transcript
+      operationId: getMultiChatTranscript
+      x-operation-id-source: derived
 components:
   schemas:
     MultiTranscriptObject:

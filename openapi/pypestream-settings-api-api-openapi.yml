@@ -8,9 +8,7 @@ info:
     ` │ Middleware │ ◄──► │ 3rd Party │`
 
 
-    ` └────────────┘ ◄──► └───────────┘`
-
-    '
+    ` └────────────┘ ◄──► └───────────┘`'
   termsOfService: https://www.pypestream.com/privacy-policy/
   title: Middleware Settings API
   version: 1.0.1
@@ -88,6 +86,13 @@ paths:
       - Settings API
 components:
   schemas:
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
     BadRequest:
       properties:
         errors:
@@ -99,26 +104,6 @@ components:
       required:
       - message
       - errors
-      type: object
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
-      type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
       type: object
     Setting:
       properties:
@@ -138,6 +123,19 @@ components:
       - integrationFields
       - callbackURL
       - callbackToken
+      type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
       type: object
   securitySchemes:
     BasicAuth:

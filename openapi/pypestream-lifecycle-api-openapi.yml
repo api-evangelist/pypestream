@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Pypestream JavaScript SDK Lifecycle API
-  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  description: Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.
   version: 3.0.0
   contact:
     name: Pypestream Support
@@ -49,9 +49,7 @@ paths:
 
         - If targetElement is omitted, uses ''window'' mode
 
-        - Can be called multiple times - shows chat if already booted
-
-        '
+        - Can be called multiple times - shows chat if already booted'
       operationId: boot
       requestBody:
         required: true
@@ -140,9 +138,7 @@ paths:
 
         - Resets boot state
 
-        - Can call `boot()` again after shutdown
-
-        '
+        - Can call `boot()` again after shutdown'
       operationId: shutdown
       responses:
         '200':
@@ -191,9 +187,7 @@ paths:
 
         - Keeps interface visible
 
-        - Triggers `onChatRestart` handlers
-
-        '
+        - Triggers `onChatRestart` handlers'
       operationId: restartChat
       responses:
         '200':
@@ -211,37 +205,6 @@ paths:
                     example: Chat session restarted
 components:
   schemas:
-    Error:
-      type: object
-      required:
-      - error
-      - message
-      properties:
-        error:
-          type: string
-          description: Error type
-          example: Configuration Error
-        message:
-          type: string
-          description: Detailed error message
-          example: You must provide an APP_ID string in the config object
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
-    InitialMessages:
-      type: object
-      description: Configure initial welcome messages
-      properties:
-        welcomeMessage:
-          type: string
-          description: Custom welcome message text
-          example: Hello! How can I help you today?
-        showNextThinkingBubble:
-          type: boolean
-          description: Show thinking bubble animation
-          default: true
-          example: true
     PypestreamConfig:
       type: object
       required:
@@ -280,6 +243,37 @@ components:
           example: false
         initialMessages:
           $ref: '#/components/schemas/InitialMessages'
+    InitialMessages:
+      type: object
+      description: Configure initial welcome messages
+      properties:
+        welcomeMessage:
+          type: string
+          description: Custom welcome message text
+          example: Hello! How can I help you today?
+        showNextThinkingBubble:
+          type: boolean
+          description: Show thinking bubble animation
+          default: true
+          example: true
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: Configuration Error
+        message:
+          type: string
+          description: Detailed error message
+          example: You must provide an APP_ID string in the config object
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
   securitySchemes:
     ApiKey:
       type: apiKey

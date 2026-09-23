@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Pypestream JavaScript SDK Configuration API
-  description: "Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.\n\n**Note:** This is a client-side SDK, not a REST API. This OpenAPI specification documents the SDK's \npublic methods and configurations for documentation purposes.\n\n## Getting Started\n\nInclude the SDK script in your HTML:\n```html\n<script src=\"https://your-pypestream-domain/config.js\"></script>\n```\n\nThen use the global `Pypestream` object to interact with the SDK.\n\n## Display Modes\n\n- **Window Mode**: Opens chat in a popup window\n- **Inline Mode**: Embeds chat directly in your webpage\n"
+  description: Client-side JavaScript SDK for embedding conversational AI chat interfaces into web applications.
   version: 3.0.0
   contact:
     name: Pypestream Support
@@ -22,7 +22,24 @@ paths:
       tags:
       - Configuration
       summary: Configure SDK
-      description: "Configure the Pypestream SDK before initialization. Can be called before `boot()`.\n\n**JavaScript Usage:**\n```javascript\nPypestream.config({\n  APP_ID: 'your-app-id',\n  debugMode: true,\n  displayMode: 'inline'\n});\n```\n"
+      description: 'Configure the Pypestream SDK before initialization. Can be called before `boot()`.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.config({
+
+        APP_ID: ''your-app-id'',
+
+        debugMode: true,
+
+        displayMode: ''inline''
+
+        });
+
+        ```'
       operationId: config
       requestBody:
         required: true
@@ -71,7 +88,33 @@ paths:
       tags:
       - Configuration
       summary: Update configuration dynamically
-      description: "Updates the Pypestream configuration dynamically after initialization.\n\n**JavaScript Usage:**\n```javascript\nPypestream.updatePypestreamConfig({\n  debugMode: true,\n  initialMessages: {\n    welcomeMessage: 'Updated welcome!'\n  }\n});\n```\n\n**Requirements:**\n- Must call after iframe is mounted\n- Merges with existing configuration\n"
+      description: 'Updates the Pypestream configuration dynamically after initialization.
+
+
+        **JavaScript Usage:**
+
+        ```javascript
+
+        Pypestream.updatePypestreamConfig({
+
+        debugMode: true,
+
+        initialMessages: {
+
+        welcomeMessage: ''Updated welcome!''
+
+        }
+
+        });
+
+        ```
+
+
+        **Requirements:**
+
+        - Must call after iframe is mounted
+
+        - Merges with existing configuration'
       operationId: updatePypestreamConfig
       requestBody:
         required: true
@@ -98,37 +141,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      required:
-      - error
-      - message
-      properties:
-        error:
-          type: string
-          description: Error type
-          example: Configuration Error
-        message:
-          type: string
-          description: Detailed error message
-          example: You must provide an APP_ID string in the config object
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
-    InitialMessages:
-      type: object
-      description: Configure initial welcome messages
-      properties:
-        welcomeMessage:
-          type: string
-          description: Custom welcome message text
-          example: Hello! How can I help you today?
-        showNextThinkingBubble:
-          type: boolean
-          description: Show thinking bubble animation
-          default: true
-          example: true
     PypestreamConfig:
       type: object
       required:
@@ -167,6 +179,37 @@ components:
           example: false
         initialMessages:
           $ref: '#/components/schemas/InitialMessages'
+    InitialMessages:
+      type: object
+      description: Configure initial welcome messages
+      properties:
+        welcomeMessage:
+          type: string
+          description: Custom welcome message text
+          example: Hello! How can I help you today?
+        showNextThinkingBubble:
+          type: boolean
+          description: Show thinking bubble animation
+          default: true
+          example: true
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: Configuration Error
+        message:
+          type: string
+          description: Detailed error message
+          example: You must provide an APP_ID string in the config object
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
   securitySchemes:
     ApiKey:
       type: apiKey

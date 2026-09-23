@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Analytics Datasets API
   version: 1.0.0
-  description: To acquire a personal access token go to [Account settings](https://analytics.pypestream.com/me/settings) and create a new token or use an existing one
+  description: To acquire a personal access token go to Account settings and create a new token or use an existing one
 servers:
 - url: https://analytics.pypestream.com/
   description: Production server US
@@ -13,12 +13,10 @@ tags:
 paths:
   /api/datasets/:
     get:
-      description: 'Dataset: A distinct collection of analytics data, typically corresponding to an environment  (e.g., "Production", "Testing", "Development").
+      description: 'Dataset: A distinct collection of analytics data, typically corresponding to an environment (e.g., "Production", "Testing", "Development").
 
 
-        Get a list of datasets that you have access to.
-
-        '
+        Get a list of datasets that you have access to.'
       operationId: list
       parameters:
       - name: limit
@@ -42,10 +40,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedTeamBasicList'
           description: ''
+      summary: List
+      x-summary-source: derived
   /api/datasets/{id}/:
     get:
       operationId: retrieve
-      description: "Dataset: A distinct collection of analytics data, typically corresponding to an environment \n        (e.g., \"Production\", \"Testing\", \"Development\").\n\nGet a specific dataset by ID.\n"
+      description: 'Dataset: A distinct collection of analytics data, typically corresponding to an environment
+
+        (e.g., "Production", "Testing", "Development").
+
+
+        Get a specific dataset by ID.'
       parameters:
       - in: path
         name: id
@@ -69,6 +74,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeamBasic'
           description: ''
+      summary: Retrieve
+      x-summary-source: derived
 components:
   schemas:
     PaginatedTeamBasicList:
