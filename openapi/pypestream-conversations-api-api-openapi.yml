@@ -274,7 +274,7 @@ paths:
     get:
       callbacks: {}
       deprecated: false
-      operationId: conversationHistory
+      operationId: getContactCenterV1ConversationsByConversationIdHistory
       parameters:
       - description: The Conversation ID
         in: path
@@ -308,15 +308,21 @@ paths:
       summary: Get the chat conversation history
       tags:
       - Conversations API
+      x-operation-id-source: normalized
+      x-operation-id-original: conversationHistory
 components:
   schemas:
-    End:
+    BadRequest:
       properties:
-        senderId:
-          format: uuid
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
           type: string
       required:
-      - senderId
+      - message
+      - errors
       type: object
     Error:
       properties:
@@ -330,6 +336,61 @@ components:
       - source
       - type
       - message
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+    Metadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+        bot:
+          description: The metadata values saved on microapp side
+          properties: {}
+          type: object
+        user:
+          description: The metadata values saved on user side
+          properties: {}
+          type: object
+      required:
+      - agent
+      - bot
+      - user
+      type: object
+    History:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/MessageSent'
+          type: array
+        pagination:
+          properties:
+            page:
+              type: integer
+            totalPages:
+              type: integer
+          required:
+          - page
+          - totalPages
+          type: object
+      required:
+      - pagination
+      - messages
+      type: object
+    AgentMetadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+      required:
+      - agent
       type: object
     Message:
       properties:
@@ -354,14 +415,13 @@ components:
       required:
       - typing
       type: object
-    AgentMetadata:
+    End:
       properties:
-        agent:
-          description: The metadata values saved on agent side
-          properties: {}
-          type: object
+        senderId:
+          format: uuid
+          type: string
       required:
-      - agent
+      - senderId
       type: object
     MessageSent:
       properties:
@@ -385,64 +445,6 @@ components:
       - senderId
       - side
       - sentDate
-      type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    History:
-      properties:
-        messages:
-          items:
-            $ref: '#/components/schemas/MessageSent'
-          type: array
-        pagination:
-          properties:
-            page:
-              type: integer
-            totalPages:
-              type: integer
-          required:
-          - page
-          - totalPages
-          type: object
-      required:
-      - pagination
-      - messages
-      type: object
-    Metadata:
-      properties:
-        agent:
-          description: The metadata values saved on agent side
-          properties: {}
-          type: object
-        bot:
-          description: The metadata values saved on microapp side
-          properties: {}
-          type: object
-        user:
-          description: The metadata values saved on user side
-          properties: {}
-          type: object
-      required:
-      - agent
-      - bot
-      - user
       type: object
     Message_2:
       properties:

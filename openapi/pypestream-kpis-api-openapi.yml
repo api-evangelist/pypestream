@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Analytics KP Is API
+  title: Analytics KPIs API
   version: 1.0.0
   description: To acquire a personal access token go to Account settings and create a new token or use an existing one
 servers:
@@ -81,28 +81,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedKPIList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/KPI'
     KPI:
       type: object
       properties:
@@ -160,6 +138,28 @@ components:
       - last_updated_by
       - name
       - Trend
+    PaginatedKPIList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/KPI'
   securitySchemes:
     APIKey:
       type: http

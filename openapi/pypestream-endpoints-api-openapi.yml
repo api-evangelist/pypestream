@@ -365,6 +365,43 @@ paths:
       - Endpoints
 components:
   schemas:
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    PreconditionRequired:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
     SnapshotResponse:
       properties:
         consumer_type:
@@ -546,6 +583,117 @@ components:
       - id
       - history
       type: object
+    Snapshot:
+      properties:
+        from:
+          description: The 'id' received with the Create User response
+          format: uuid
+          type: string
+      required:
+      - from
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+    AnonymousSession:
+      properties:
+        app_id:
+          description: The unique identifier of the Pype that the user will engage with.
+          format: uuid
+          type: string
+        app_type:
+          description: 'The category of the app. Valid options are: ''consumer''.'
+          example: consumer
+          type: string
+        browser_language:
+          description: The language locale used by the client's browser (e.g., 'en-US').
+          example: en-US
+          type: string
+        device_id:
+          description: The device's universally unique identifier (UUID) connecting to the conversation.
+          type: string
+        device_type:
+          description: 'The category of the client device. Valid options include: ''apple,'' ''android'', ''browser,'' ''mobile-browser,'' and ''web.'''
+          example: web
+          type: string
+        ip_address:
+          description: The IP address of the client.
+          type: string
+        language:
+          type: string
+          description: The language used in the microapp.
+          example: en
+        last_viewed_url:
+          description: The most recently visited URL by the client.
+          example: http://www.example.com
+          type: string
+        location:
+          description: The geographical location of the client (e.g., 'Richmond, VA, United States').
+          type: string
+        passthrough:
+          description: Additional user information in JSON format.
+          type: string
+        platform:
+          description: The client's platform or operating system (e.g., 'ios', 'android', 'MacOSX', etc.).
+          example: Mac OS X10_14_4
+          type: string
+        referring_site:
+          description: The website that referred the client.
+          example: http://www.example.com
+          type: string
+        screen_resolution:
+          description: The screen resolution of the client's device (e.g., '1280x720').
+          example: 1280 x 800
+          type: string
+        token:
+          description: The APN/GCM token is provided by the client.
+          format: hash
+          type: string
+        user_browser:
+          description: The browser used by the client.
+          example: Chrome 74.0.3729.131
+          type: string
+      required:
+      - app_id
+      - browser_language
+      - referring_site
+      - user_browser
+      type: object
+    Pong:
+      type: object
+      required:
+      - chat_id
+      - user_id
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          description: The 'id' of the chat
+        user_id:
+          type: string
+          format: uuid
+          description: The 'id' received with the Create User response
+        seq:
+          type: integer
+          description: Incremental integer, will be the same on Ping response
+          example: 1
+    Ping:
+      type: object
+      required:
+      - user_id
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: The 'id' value obtained from the response of the 'Create User' method.
+        seq:
+          type: integer
+          description: An incremental integer that will be the same in the pong response. This helps in tracking the correspondence between ping and pong messages.
+          example: 1
     AnonymousSessionResponse:
       properties:
         access_token:
@@ -628,24 +776,6 @@ components:
       - web_chat_pype_id
       - web_chat_stream_id
       type: object
-    Pong:
-      type: object
-      required:
-      - chat_id
-      - user_id
-      properties:
-        chat_id:
-          type: string
-          format: uuid
-          description: The 'id' of the chat
-        user_id:
-          type: string
-          format: uuid
-          description: The 'id' received with the Create User response
-        seq:
-          type: integer
-          description: Incremental integer, will be the same on Ping response
-          example: 1
     Type:
       type: object
       required:
@@ -670,46 +800,6 @@ components:
           type: string
           description: The side that originates the typing status request.
           example: consumer
-    PreconditionRequired:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    EndChat:
-      properties:
-        ended_by:
-          description: The ID of the user that ended the engagement
-          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
-          type: string
-        pype_id:
-          description: The 'web_chat_pype_id' received with the Create User response
-          type: string
-        source:
-          description: Source of the end engagement request (client or server)
-          example: client
-          type: string
-        user_id:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-        version:
-          description: API version
-          example: '1'
-          type: string
-      required:
-      - pype_id
-      - user_id
-      - ended_by
-      - source
-      - version
-      type: object
     ExistingActiveConversation:
       properties:
         errors:
@@ -721,40 +811,6 @@ components:
       required:
       - message
       - errors
-      type: object
-    Snapshot:
-      properties:
-        from:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-      required:
-      - from
-      type: object
-    NotFound:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
       type: object
     SendMessage:
       properties:
@@ -821,19 +877,34 @@ components:
       - version
       - gateway
       type: object
-    Ping:
-      type: object
-      required:
-      - user_id
+    EndChat:
       properties:
-        user_id:
+        ended_by:
+          description: The ID of the user that ended the engagement
+          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
           type: string
+        pype_id:
+          description: The 'web_chat_pype_id' received with the Create User response
+          type: string
+        source:
+          description: Source of the end engagement request (client or server)
+          example: client
+          type: string
+        user_id:
+          description: The 'id' received with the Create User response
           format: uuid
-          description: The 'id' value obtained from the response of the 'Create User' method.
-        seq:
-          type: integer
-          description: An incremental integer that will be the same in the pong response. This helps in tracking the correspondence between ping and pong messages.
-          example: 1
+          type: string
+        version:
+          description: API version
+          example: '1'
+          type: string
+      required:
+      - pype_id
+      - user_id
+      - ended_by
+      - source
+      - version
+      type: object
     StartChat:
       properties:
         app_id:
@@ -868,14 +939,7 @@ components:
       - version
       - gateway
       type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-    BadRequest:
+    NotFound:
       properties:
         errors:
           items:
@@ -886,70 +950,6 @@ components:
       required:
       - message
       - errors
-      type: object
-    AnonymousSession:
-      properties:
-        app_id:
-          description: The unique identifier of the Pype that the user will engage with.
-          format: uuid
-          type: string
-        app_type:
-          description: 'The category of the app. Valid options are: ''consumer''.'
-          example: consumer
-          type: string
-        browser_language:
-          description: The language locale used by the client's browser (e.g., 'en-US').
-          example: en-US
-          type: string
-        device_id:
-          description: The device's universally unique identifier (UUID) connecting to the conversation.
-          type: string
-        device_type:
-          description: 'The category of the client device. Valid options include: ''apple,'' ''android'', ''browser,'' ''mobile-browser,'' and ''web.'''
-          example: web
-          type: string
-        ip_address:
-          description: The IP address of the client.
-          type: string
-        language:
-          type: string
-          description: The language used in the microapp.
-          example: en
-        last_viewed_url:
-          description: The most recently visited URL by the client.
-          example: http://www.example.com
-          type: string
-        location:
-          description: The geographical location of the client (e.g., 'Richmond, VA, United States').
-          type: string
-        passthrough:
-          description: Additional user information in JSON format.
-          type: string
-        platform:
-          description: The client's platform or operating system (e.g., 'ios', 'android', 'MacOSX', etc.).
-          example: Mac OS X10_14_4
-          type: string
-        referring_site:
-          description: The website that referred the client.
-          example: http://www.example.com
-          type: string
-        screen_resolution:
-          description: The screen resolution of the client's device (e.g., '1280x720').
-          example: 1280 x 800
-          type: string
-        token:
-          description: The APN/GCM token is provided by the client.
-          format: hash
-          type: string
-        user_browser:
-          description: The browser used by the client.
-          example: Chrome 74.0.3729.131
-          type: string
-      required:
-      - app_id
-      - browser_language
-      - referring_site
-      - user_browser
       type: object
   securitySchemes:
     BearerAuth:

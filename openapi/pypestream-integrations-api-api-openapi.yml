@@ -249,37 +249,17 @@ paths:
       description: Sandbox
 components:
   schemas:
-    Integration:
+    BadRequest:
       properties:
-        callbackToken:
-          format: hash
-          type: string
-        callbackURL:
-          format: url
-          type: string
-        id:
-          format: uuid
-          type: string
-        integrationFields:
-          properties: {}
-          type: object
-        integrationName:
-          type: string
-      required:
-      - id
-      - integrationName
-      - integrationFields
-      - callbackURL
-      - callbackToken
-      type: object
-    IntegrationList:
-      properties:
-        integrations:
+        errors:
           items:
-            $ref: '#/components/schemas/Integration'
+            $ref: '#/components/schemas/Error'
           type: array
+        message:
+          type: string
       required:
-      - integrations
+      - message
+      - errors
       type: object
     Error:
       properties:
@@ -308,6 +288,22 @@ components:
         integrationName:
           type: string
       type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+    IntegrationList:
+      properties:
+        integrations:
+          items:
+            $ref: '#/components/schemas/Integration'
+          type: array
+      required:
+      - integrations
+      type: object
     IntegrationCreate:
       properties:
         callbackToken:
@@ -327,24 +323,28 @@ components:
       - callbackURL
       - callbackToken
       type: object
-    InternalError:
+    Integration:
       properties:
-        message:
+        callbackToken:
+          format: hash
+          type: string
+        callbackURL:
+          format: url
+          type: string
+        id:
+          format: uuid
+          type: string
+        integrationFields:
+          properties: {}
+          type: object
+        integrationName:
           type: string
       required:
-      - message
-      type: object
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
+      - id
+      - integrationName
+      - integrationFields
+      - callbackURL
+      - callbackToken
       type: object
   securitySchemes:
     BasicAuth:

@@ -78,28 +78,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedTeamBasicList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/TeamBasic'
     TeamBasic:
       type: object
       description: 'Serializer for `Team` model with minimal attributes to speeed up loading and transfer times.
@@ -149,6 +127,28 @@ components:
       - project
       - timezone
       - uuid
+    PaginatedTeamBasicList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamBasic'
   securitySchemes:
     APIKey:
       type: http

@@ -179,19 +179,6 @@ components:
           example: false
         initialMessages:
           $ref: '#/components/schemas/InitialMessages'
-    InitialMessages:
-      type: object
-      description: Configure initial welcome messages
-      properties:
-        welcomeMessage:
-          type: string
-          description: Custom welcome message text
-          example: Hello! How can I help you today?
-        showNextThinkingBubble:
-          type: boolean
-          description: Show thinking bubble animation
-          default: true
-          example: true
     Error:
       type: object
       required:
@@ -210,6 +197,19 @@ components:
           type: object
           description: Additional error details
           additionalProperties: true
+    InitialMessages:
+      type: object
+      description: Configure initial welcome messages
+      properties:
+        welcomeMessage:
+          type: string
+          description: Custom welcome message text
+          example: Hello! How can I help you today?
+        showNextThinkingBubble:
+          type: boolean
+          description: Show thinking bubble animation
+          default: true
+          example: true
   securitySchemes:
     ApiKey:
       type: apiKey

@@ -418,6 +418,75 @@ paths:
       description: Local Sandbox Server for testing.
 components:
   schemas:
+    DashboardTileBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dashboard_id:
+          type: integer
+          readOnly: true
+        deleted:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - dashboard_id
+      - id
+    PaginatedInsightList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Insight'
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
     Insight:
       type: object
       description: Simplified serializer to speed response times when loading large amounts of objects.
@@ -575,75 +644,6 @@ components:
       - short_id
       - timezone
       - updated_at
-    PaginatedInsightList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Insight'
-    DashboardTileBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        dashboard_id:
-          type: integer
-          readOnly: true
-        deleted:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - dashboard_id
-      - id
-    UserBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        distinct_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        first_name:
-          type: string
-          maxLength: 150
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 254
-        is_email_verified:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - email
-      - id
-      - uuid
   securitySchemes:
     APIKey:
       type: http
