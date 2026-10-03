@@ -96,6 +96,34 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    MultiAgentObject:
+      type: array
+      items:
+        $ref: '#/components/schemas/AgentObject'
+      example:
+      - agent_id: 72c0c608-a665-3144-99a4-2036e2f3d59d
+        agent_name: “Jane Doe”
+        chats_assigned: 10
+        status_updates:
+        - new_status: online
+          prev_status: offline
+          ts: '2020-04-20T18:45:36.000Z'
+        - new_status: away
+          prev_status: online
+          ts: '2020-04-20T18:45:40.000Z'
+        - new_status: online
+          prev_status: away
+          ts: '2020-04-20T18:45:47.000Z'
+      - agent_id: d269ed1b-1d3a-4b77-af09-40c278f2b939
+        agent_name: “Pete Smith”
+        chats_assigned: 7
+        status_updates:
+        - new_status: online
+          prev_status: offline
+          ts: '2020-04-20T19:45:03.000Z'
+        - new_status: away
+          prev_status: online
+          ts: '2020-04-20T19:45:06.000Z'
     AgentObject:
       type: object
       properties:
@@ -150,34 +178,6 @@ components:
         - new_status: online
           prev_status: away
           ts: '2020-04-20T18:45:47.000Z'
-    MultiAgentObject:
-      type: array
-      items:
-        $ref: '#/components/schemas/AgentObject'
-      example:
-      - agent_id: 72c0c608-a665-3144-99a4-2036e2f3d59d
-        agent_name: “Jane Doe”
-        chats_assigned: 10
-        status_updates:
-        - new_status: online
-          prev_status: offline
-          ts: '2020-04-20T18:45:36.000Z'
-        - new_status: away
-          prev_status: online
-          ts: '2020-04-20T18:45:40.000Z'
-        - new_status: online
-          prev_status: away
-          ts: '2020-04-20T18:45:47.000Z'
-      - agent_id: d269ed1b-1d3a-4b77-af09-40c278f2b939
-        agent_name: “Pete Smith”
-        chats_assigned: 7
-        status_updates:
-        - new_status: online
-          prev_status: offline
-          ts: '2020-04-20T19:45:03.000Z'
-        - new_status: away
-          prev_status: online
-          ts: '2020-04-20T19:45:06.000Z'
   securitySchemes:
     BasicAuth:
       type: http

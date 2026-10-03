@@ -113,6 +113,59 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    MultiTranscriptObject:
+      type: array
+      items:
+        $ref: '#/components/schemas/TranscriptObject'
+      example:
+      - consumer:
+          type: Web chat visitor
+        conversation_id: 15ea544c-99dd-4a11-a999-b8dd2f03f426
+        metadata:
+          end_comment: undefined
+          end_tags: []
+          pype_name: Customer.SolutionOne
+          stream_name: Support
+        transcript:
+        - message: Hello, welcome to this solution.
+          participant: Customer.SolutionOne
+          seq_num: 1
+          timestamp: '2020-06-05T12:32:11.000Z'
+          type: bot
+        - message: How can I help?
+          participant: Customer.SolutionOne
+          seq_num: 2
+          timestamp: '2020-06-05T12:32:11.000Z'
+          type: bot
+        - message: Id like to check my account balance
+          participant: Web chat visitor
+          seq_num: 4
+          timestamp: '2020-06-05T12:32:15.000Z'
+          type: consumer
+      - consumer:
+          type: Web chat visitor
+        conversation_id: 15ea324c-99dd-4a11-a999-b8dd2f763h65
+        metadata:
+          end_comment: undefined
+          end_tags: []
+          pype_name: Customer.SolutionOne
+          stream_name: Support
+        transcript:
+        - message: Hello, welcome to this solution.
+          participant: Customer.SolutionOne
+          seq_num: 1
+          timestamp: '2020-06-05T12:35:21.000Z'
+          type: bot
+        - message: How can I help?
+          participant: Customer.SolutionOne
+          seq_num: 2
+          timestamp: '2020-06-05T12:35:21.000Z'
+          type: bot
+        - message: Can you help me reset my password?
+          participant: Web chat visitor
+          seq_num: 4
+          timestamp: '2020-06-05T12:35:25.000Z'
+          type: consumer
     TranscriptObject:
       type: object
       properties:
@@ -177,59 +230,6 @@ components:
               sessionsVariables:
                 type: object
                 description: If the sessionsVariables=true parameter is provided, it returns an object containing all session variables prefixed by _RAPI and their corresponding values. Any variables not including this prefix are excluded from reporting.
-    MultiTranscriptObject:
-      type: array
-      items:
-        $ref: '#/components/schemas/TranscriptObject'
-      example:
-      - consumer:
-          type: Web chat visitor
-        conversation_id: 15ea544c-99dd-4a11-a999-b8dd2f03f426
-        metadata:
-          end_comment: undefined
-          end_tags: []
-          pype_name: Customer.SolutionOne
-          stream_name: Support
-        transcript:
-        - message: Hello, welcome to this solution.
-          participant: Customer.SolutionOne
-          seq_num: 1
-          timestamp: '2020-06-05T12:32:11.000Z'
-          type: bot
-        - message: How can I help?
-          participant: Customer.SolutionOne
-          seq_num: 2
-          timestamp: '2020-06-05T12:32:11.000Z'
-          type: bot
-        - message: Id like to check my account balance
-          participant: Web chat visitor
-          seq_num: 4
-          timestamp: '2020-06-05T12:32:15.000Z'
-          type: consumer
-      - consumer:
-          type: Web chat visitor
-        conversation_id: 15ea324c-99dd-4a11-a999-b8dd2f763h65
-        metadata:
-          end_comment: undefined
-          end_tags: []
-          pype_name: Customer.SolutionOne
-          stream_name: Support
-        transcript:
-        - message: Hello, welcome to this solution.
-          participant: Customer.SolutionOne
-          seq_num: 1
-          timestamp: '2020-06-05T12:35:21.000Z'
-          type: bot
-        - message: How can I help?
-          participant: Customer.SolutionOne
-          seq_num: 2
-          timestamp: '2020-06-05T12:35:21.000Z'
-          type: bot
-        - message: Can you help me reset my password?
-          participant: Web chat visitor
-          seq_num: 4
-          timestamp: '2020-06-05T12:35:25.000Z'
-          type: consumer
   securitySchemes:
     BasicAuth:
       type: http

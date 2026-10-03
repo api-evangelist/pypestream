@@ -160,6 +160,80 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ClickhouseEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        distinct_id:
+          type: string
+          readOnly: true
+        properties:
+          type: string
+          readOnly: true
+        event:
+          type: string
+          readOnly: true
+        timestamp:
+          type: string
+          readOnly: true
+        person:
+          type: string
+          readOnly: true
+        elements:
+          type: string
+          readOnly: true
+        elements_chain:
+          type: string
+          readOnly: true
+      required:
+      - distinct_id
+      - elements
+      - elements_chain
+      - event
+      - id
+      - person
+      - properties
+      - timestamp
+    PaginatedClickhouseEventList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClickhouseEvent'
+    Property:
+      type: object
+      properties:
+        type:
+          enum:
+          - AND
+          - OR
+          type: string
+          default: AND
+          description: "\n You can use a simplified version:\n```json\n{\n    \"properties\": [\n        {\n            \"key\": \"email\",\n            \"value\": \"x@y.com\",\n            \"operator\": \"exact\",\n            \"type\": \"event\"\n        }\n    ]\n}\n```\n\nOr you can create more complicated queries with AND and OR:\n```json\n{\n    \"properties\": {\n        \"type\": \"AND\",\n        \"values\": [\n            {\n                \"type\": \"OR\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            },\n            {\n                \"type\": \"AND\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            }\n        ]\n    ]\n}\n```\n"
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyItem'
+      required:
+      - values
     PropertyItem:
       type: object
       properties:
@@ -211,80 +285,6 @@ components:
       required:
       - key
       - value
-    ClickhouseEvent:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        distinct_id:
-          type: string
-          readOnly: true
-        properties:
-          type: string
-          readOnly: true
-        event:
-          type: string
-          readOnly: true
-        timestamp:
-          type: string
-          readOnly: true
-        person:
-          type: string
-          readOnly: true
-        elements:
-          type: string
-          readOnly: true
-        elements_chain:
-          type: string
-          readOnly: true
-      required:
-      - distinct_id
-      - elements
-      - elements_chain
-      - event
-      - id
-      - person
-      - properties
-      - timestamp
-    Property:
-      type: object
-      properties:
-        type:
-          enum:
-          - AND
-          - OR
-          type: string
-          default: AND
-          description: "\n You can use a simplified version:\n```json\n{\n    \"properties\": [\n        {\n            \"key\": \"email\",\n            \"value\": \"x@y.com\",\n            \"operator\": \"exact\",\n            \"type\": \"event\"\n        }\n    ]\n}\n```\n\nOr you can create more complicated queries with AND and OR:\n```json\n{\n    \"properties\": {\n        \"type\": \"AND\",\n        \"values\": [\n            {\n                \"type\": \"OR\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            },\n            {\n                \"type\": \"AND\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            }\n        ]\n    ]\n}\n```\n"
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/PropertyItem'
-      required:
-      - values
-    PaginatedClickhouseEventList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClickhouseEvent'
   securitySchemes:
     APIKey:
       type: http

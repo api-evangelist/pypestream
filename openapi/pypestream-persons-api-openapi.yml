@@ -127,6 +127,28 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedPersonList:
+      type: object
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
+        count:
+          type: integer
+          example: 400
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
     Person:
       type: object
       properties:
@@ -158,6 +180,22 @@ components:
       - id
       - name
       - uuid
+    Property:
+      type: object
+      properties:
+        type:
+          enum:
+          - AND
+          - OR
+          type: string
+          default: AND
+          description: "\n You can use a simplified version:\n```json\n{\n    \"properties\": [\n        {\n            \"key\": \"email\",\n            \"value\": \"x@y.com\",\n            \"operator\": \"exact\",\n            \"type\": \"event\"\n        }\n    ]\n}\n```\n\nOr you can create more complicated queries with AND and OR:\n```json\n{\n    \"properties\": {\n        \"type\": \"AND\",\n        \"values\": [\n            {\n                \"type\": \"OR\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            },\n            {\n                \"type\": \"AND\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            }\n        ]\n    ]\n}\n```\n"
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyItem'
+      required:
+      - values
     PropertyItem:
       type: object
       properties:
@@ -209,44 +247,6 @@ components:
       required:
       - key
       - value
-    PaginatedPersonList:
-      type: object
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
-        count:
-          type: integer
-          example: 400
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Person'
-    Property:
-      type: object
-      properties:
-        type:
-          enum:
-          - AND
-          - OR
-          type: string
-          default: AND
-          description: "\n You can use a simplified version:\n```json\n{\n    \"properties\": [\n        {\n            \"key\": \"email\",\n            \"value\": \"x@y.com\",\n            \"operator\": \"exact\",\n            \"type\": \"event\"\n        }\n    ]\n}\n```\n\nOr you can create more complicated queries with AND and OR:\n```json\n{\n    \"properties\": {\n        \"type\": \"AND\",\n        \"values\": [\n            {\n                \"type\": \"OR\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            },\n            {\n                \"type\": \"AND\",\n                \"values\": [\n                    {\"key\": \"email\", ...},\n                    {\"key\": \"email\", ...}\n                ]\n            }\n        ]\n    ]\n}\n```\n"
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/PropertyItem'
-      required:
-      - values
   securitySchemes:
     APIKey:
       type: http

@@ -101,6 +101,62 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Action:
+      type: object
+      description: Serializer mixin that resolves appropriate response for tags depending on license.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        description:
+          type: string
+        tags:
+          type: array
+          items: {}
+        post_to_slack:
+          type: boolean
+        slack_message_format:
+          type: string
+          maxLength: 600
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionStep'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        deleted:
+          type: boolean
+        is_calculating:
+          type: boolean
+          readOnly: true
+        last_calculated_at:
+          type: string
+          format: date-time
+        team_id:
+          type: integer
+          readOnly: true
+        is_action:
+          type: boolean
+          readOnly: true
+          default: true
+      required:
+      - created_at
+      - created_by
+      - id
+      - is_action
+      - is_calculating
+      - team_id
     ActionStep:
       type: object
       properties:
@@ -176,28 +232,6 @@ components:
           - object
           - 'null'
           additionalProperties: {}
-    PaginatedActionList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Action'
     UserBasic:
       type: object
       properties:
@@ -229,62 +263,28 @@ components:
       - email
       - id
       - uuid
-    Action:
+    PaginatedActionList:
       type: object
-      description: Serializer mixin that resolves appropriate response for tags depending on license.
       properties:
-        id:
+        count:
           type: integer
-          readOnly: true
-        name:
+          example: 123
+        next:
           type:
           - string
           - 'null'
-          maxLength: 400
-        description:
-          type: string
-        tags:
-          type: array
-          items: {}
-        post_to_slack:
-          type: boolean
-        slack_message_format:
-          type: string
-          maxLength: 600
-        steps:
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/ActionStep'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        created_by:
-          allOf:
-          - $ref: '#/components/schemas/UserBasic'
-          readOnly: true
-        deleted:
-          type: boolean
-        is_calculating:
-          type: boolean
-          readOnly: true
-        last_calculated_at:
-          type: string
-          format: date-time
-        team_id:
-          type: integer
-          readOnly: true
-        is_action:
-          type: boolean
-          readOnly: true
-          default: true
-      required:
-      - created_at
-      - created_by
-      - id
-      - is_action
-      - is_calculating
-      - team_id
+            $ref: '#/components/schemas/Action'
   securitySchemes:
     APIKey:
       type: http

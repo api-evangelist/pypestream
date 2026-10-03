@@ -312,86 +312,6 @@ paths:
       x-operation-id-original: conversationHistory
 components:
   schemas:
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
-      type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-    Metadata:
-      properties:
-        agent:
-          description: The metadata values saved on agent side
-          properties: {}
-          type: object
-        bot:
-          description: The metadata values saved on microapp side
-          properties: {}
-          type: object
-        user:
-          description: The metadata values saved on user side
-          properties: {}
-          type: object
-      required:
-      - agent
-      - bot
-      - user
-      type: object
-    History:
-      properties:
-        messages:
-          items:
-            $ref: '#/components/schemas/MessageSent'
-          type: array
-        pagination:
-          properties:
-            page:
-              type: integer
-            totalPages:
-              type: integer
-          required:
-          - page
-          - totalPages
-          type: object
-      required:
-      - pagination
-      - messages
-      type: object
-    AgentMetadata:
-      properties:
-        agent:
-          description: The metadata values saved on agent side
-          properties: {}
-          type: object
-      required:
-      - agent
-      type: object
     Message:
       properties:
         content:
@@ -422,6 +342,86 @@ components:
           type: string
       required:
       - senderId
+      type: object
+    AgentMetadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+      required:
+      - agent
+      type: object
+    History:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/MessageSent'
+          type: array
+        pagination:
+          properties:
+            page:
+              type: integer
+            totalPages:
+              type: integer
+          required:
+          - page
+          - totalPages
+          type: object
+      required:
+      - pagination
+      - messages
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
+    Metadata:
+      properties:
+        agent:
+          description: The metadata values saved on agent side
+          properties: {}
+          type: object
+        bot:
+          description: The metadata values saved on microapp side
+          properties: {}
+          type: object
+        user:
+          description: The metadata values saved on user side
+          properties: {}
+          type: object
+      required:
+      - agent
+      - bot
+      - user
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
       type: object
     MessageSent:
       properties:

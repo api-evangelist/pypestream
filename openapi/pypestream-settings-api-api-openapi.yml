@@ -111,13 +111,6 @@ components:
       - type
       - message
       type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
     Setting:
       properties:
         callbackToken:
@@ -136,6 +129,13 @@ components:
       - integrationFields
       - callbackURL
       - callbackToken
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
       type: object
   securitySchemes:
     BasicAuth:
