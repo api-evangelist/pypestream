@@ -101,62 +101,37 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Action:
+    UserBasic:
       type: object
-      description: Serializer mixin that resolves appropriate response for tags depending on license.
       properties:
         id:
           type: integer
           readOnly: true
-        name:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
           type:
           - string
           - 'null'
-          maxLength: 400
-        description:
+          maxLength: 200
+        first_name:
           type: string
-        tags:
-          type: array
-          items: {}
-        post_to_slack:
-          type: boolean
-        slack_message_format:
+          maxLength: 150
+        email:
           type: string
-          maxLength: 600
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/ActionStep'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-        created_by:
-          allOf:
-          - $ref: '#/components/schemas/UserBasic'
-          readOnly: true
-        deleted:
-          type: boolean
-        is_calculating:
-          type: boolean
-          readOnly: true
-        last_calculated_at:
-          type: string
-          format: date-time
-        team_id:
-          type: integer
-          readOnly: true
-        is_action:
-          type: boolean
-          readOnly: true
-          default: true
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
       required:
-      - created_at
-      - created_by
+      - email
       - id
-      - is_action
-      - is_calculating
-      - team_id
+      - uuid
     ActionStep:
       type: object
       properties:
@@ -232,37 +207,6 @@ components:
           - object
           - 'null'
           additionalProperties: {}
-    UserBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        distinct_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        first_name:
-          type: string
-          maxLength: 150
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 254
-        is_email_verified:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - email
-      - id
-      - uuid
     PaginatedActionList:
       type: object
       properties:
@@ -285,6 +229,62 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Action'
+    Action:
+      type: object
+      description: Serializer mixin that resolves appropriate response for tags depending on license.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 400
+        description:
+          type: string
+        tags:
+          type: array
+          items: {}
+        post_to_slack:
+          type: boolean
+        slack_message_format:
+          type: string
+          maxLength: 600
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionStep'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          allOf:
+          - $ref: '#/components/schemas/UserBasic'
+          readOnly: true
+        deleted:
+          type: boolean
+        is_calculating:
+          type: boolean
+          readOnly: true
+        last_calculated_at:
+          type: string
+          format: date-time
+        team_id:
+          type: integer
+          readOnly: true
+        is_action:
+          type: boolean
+          readOnly: true
+          default: true
+      required:
+      - created_at
+      - created_by
+      - id
+      - is_action
+      - is_calculating
+      - team_id
   securitySchemes:
     APIKey:
       type: http

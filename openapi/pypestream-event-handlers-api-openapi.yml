@@ -250,15 +250,6 @@ paths:
                 $ref: '#/components/schemas/EventRegistrationResponse'
 components:
   schemas:
-    EventHandler:
-      type: object
-      required:
-      - handler
-      properties:
-        handler:
-          type: string
-          description: JavaScript function name or reference
-          example: myHandlerFunction
     EventRegistrationResponse:
       type: object
       properties:
@@ -271,6 +262,15 @@ components:
         message:
           type: string
           example: Event handler registered successfully
+    EventHandler:
+      type: object
+      required:
+      - handler
+      properties:
+        handler:
+          type: string
+          description: JavaScript function name or reference
+          example: myHandlerFunction
   securitySchemes:
     ApiKey:
       type: apiKey

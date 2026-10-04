@@ -125,6 +125,59 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
+    PaginatedCohortList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cohort'
     Cohort:
       type: object
       properties:
@@ -186,59 +239,6 @@ components:
       - id
       - is_calculating
       - last_calculation
-    UserBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        distinct_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        first_name:
-          type: string
-          maxLength: 150
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 254
-        is_email_verified:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - email
-      - id
-      - uuid
-    PaginatedCohortList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: http://api.example.org/accounts/?offset=200&limit=100
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Cohort'
   securitySchemes:
     APIKey:
       type: http

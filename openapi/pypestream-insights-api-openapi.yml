@@ -418,37 +418,6 @@ paths:
       description: Local Sandbox Server for testing.
 components:
   schemas:
-    UserBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        uuid:
-          type: string
-          format: uuid
-          readOnly: true
-        distinct_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 200
-        first_name:
-          type: string
-          maxLength: 150
-        email:
-          type: string
-          format: email
-          title: Email address
-          maxLength: 254
-        is_email_verified:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - email
-      - id
-      - uuid
     Insight:
       type: object
       description: Simplified serializer to speed response times when loading large amounts of objects.
@@ -606,6 +575,53 @@ components:
       - short_id
       - timezone
       - updated_at
+    UserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        distinct_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+        first_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        is_email_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - email
+      - id
+      - uuid
+    DashboardTileBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dashboard_id:
+          type: integer
+          readOnly: true
+        deleted:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - dashboard_id
+      - id
     PaginatedInsightList:
       type: object
       properties:
@@ -628,22 +644,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Insight'
-    DashboardTileBasic:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        dashboard_id:
-          type: integer
-          readOnly: true
-        deleted:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - dashboard_id
-      - id
   securitySchemes:
     APIKey:
       type: http

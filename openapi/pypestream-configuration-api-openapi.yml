@@ -141,6 +141,24 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      required:
+      - error
+      - message
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: Configuration Error
+        message:
+          type: string
+          description: Detailed error message
+          example: You must provide an APP_ID string in the config object
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
     PypestreamConfig:
       type: object
       required:
@@ -179,24 +197,6 @@ components:
           example: false
         initialMessages:
           $ref: '#/components/schemas/InitialMessages'
-    Error:
-      type: object
-      required:
-      - error
-      - message
-      properties:
-        error:
-          type: string
-          description: Error type
-          example: Configuration Error
-        message:
-          type: string
-          description: Detailed error message
-          example: You must provide an APP_ID string in the config object
-        details:
-          type: object
-          description: Additional error details
-          additionalProperties: true
     InitialMessages:
       type: object
       description: Configure initial welcome messages

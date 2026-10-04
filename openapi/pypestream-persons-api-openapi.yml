@@ -127,28 +127,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedPersonList:
-      type: object
-      properties:
-        next:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
-        previous:
-          type:
-          - string
-          - 'null'
-          format: uri
-          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
-        count:
-          type: integer
-          example: 400
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Person'
     Person:
       type: object
       properties:
@@ -180,6 +158,28 @@ components:
       - id
       - name
       - uuid
+    PaginatedPersonList:
+      type: object
+      properties:
+        next:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
+        previous:
+          type:
+          - string
+          - 'null'
+          format: uri
+          example: https://analytics.pypestream.com/api/datasets/{dataset_id}/accounts/?offset=400&limit=100
+        count:
+          type: integer
+          example: 400
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
     Property:
       type: object
       properties:

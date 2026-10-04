@@ -249,6 +249,52 @@ paths:
       description: Sandbox
 components:
   schemas:
+    IntegrationPatch:
+      properties:
+        callbackToken:
+          format: hash
+          type: string
+        callbackURL:
+          format: url
+          type: string
+        integrationFields:
+          properties: {}
+          type: object
+        integrationName:
+          type: string
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
     IntegrationList:
       properties:
         integrations:
@@ -277,32 +323,6 @@ components:
       - callbackURL
       - callbackToken
       type: object
-    IntegrationPatch:
-      properties:
-        callbackToken:
-          format: hash
-          type: string
-        callbackURL:
-          format: url
-          type: string
-        integrationFields:
-          properties: {}
-          type: object
-        integrationName:
-          type: string
-      type: object
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
     Integration:
       properties:
         callbackToken:
@@ -325,26 +345,6 @@ components:
       - integrationFields
       - callbackURL
       - callbackToken
-      type: object
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
-      type: object
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
       type: object
   securitySchemes:
     BasicAuth:

@@ -160,42 +160,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ClickhouseEvent:
-      type: object
-      properties:
-        id:
-          type: string
-          readOnly: true
-        distinct_id:
-          type: string
-          readOnly: true
-        properties:
-          type: string
-          readOnly: true
-        event:
-          type: string
-          readOnly: true
-        timestamp:
-          type: string
-          readOnly: true
-        person:
-          type: string
-          readOnly: true
-        elements:
-          type: string
-          readOnly: true
-        elements_chain:
-          type: string
-          readOnly: true
-      required:
-      - distinct_id
-      - elements
-      - elements_chain
-      - event
-      - id
-      - person
-      - properties
-      - timestamp
     PaginatedClickhouseEventList:
       type: object
       properties:
@@ -285,6 +249,42 @@ components:
       required:
       - key
       - value
+    ClickhouseEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        distinct_id:
+          type: string
+          readOnly: true
+        properties:
+          type: string
+          readOnly: true
+        event:
+          type: string
+          readOnly: true
+        timestamp:
+          type: string
+          readOnly: true
+        person:
+          type: string
+          readOnly: true
+        elements:
+          type: string
+          readOnly: true
+        elements_chain:
+          type: string
+          readOnly: true
+      required:
+      - distinct_id
+      - elements
+      - elements_chain
+      - event
+      - id
+      - person
+      - properties
+      - timestamp
   securitySchemes:
     APIKey:
       type: http

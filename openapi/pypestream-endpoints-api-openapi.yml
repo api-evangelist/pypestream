@@ -365,6 +365,270 @@ paths:
       - Endpoints
 components:
   schemas:
+    Type:
+      type: object
+      required:
+      - chat_id
+      - from
+      - is_typing
+      - from_side
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          description: The 'chat_id' value obtained from the response of the 'Create User' method.
+        from:
+          type: string
+          format: uuid
+          description: The 'id' value obtained from the response of the 'Create User' method.
+        is_typing:
+          type: boolean
+          description: Set to 'true' if the end user is typing and 'false' otherwise.
+          example: true
+        from_side:
+          type: string
+          description: The side that originates the typing status request.
+          example: consumer
+    SendMessage:
+      properties:
+        app_object:
+          format: hash
+          description: An object for the embedded object data.
+          type: string
+        campaign_id:
+          type: string
+          description: The id of the campaign this message originated from.
+        client_msg_id:
+          type: string
+          description: Client generated unique message id.
+        correlation_id:
+          type: string
+          description: A unique ID set by the client which can be used to correlate the responding acknowledgement of the request.
+        file:
+          description: A URL to a file to embed in the message.
+          format: uri
+          type: string
+        file_status:
+          example: uploading
+          description: 'Indicates if the file is available for downloading from the URL. States are: uploading, ready, failed'
+          type: string
+        from:
+          description: The 'id' received with the Create User response
+          format: uuid
+          type: string
+        from_side:
+          description: 'Indicates the source of the message. Possible value(s): anonymous_consumer'
+          example: anonymous_consumer
+          type: string
+        gateway:
+          description: 'Platform used by the client app. Possible value(s): pypestream_widget'
+          example: pypestream_widget
+          type: string
+        msg:
+          description: The message that's being sent
+          type: string
+        msg_type:
+          description: Message type. We support `text` and `embed`. If it is `text`, then the `msg` field is required, but if it is `embed`, then the msg will be null, and the `app_object` and `secure_app_object` fields are required.
+          example: text
+          type: string
+        persist_to_history:
+          type: boolean
+          description: Flags whether this message should be written to the persistent history.
+        secure_app_object:
+          type: boolean
+          description: Flags whether this is a secure message and thus should not be persisted.
+        user_id:
+          description: The 'id' received with the Create User response
+          format: uuid
+          type: string
+        version:
+          description: API version
+          example: '1'
+          type: string
+      required:
+      - from
+      - from_side
+      - msg
+      - msg_type
+      - user_id
+      - version
+      - gateway
+      type: object
+    PreconditionRequired:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    ExistingActiveConversation:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    BadRequest:
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+        message:
+          type: string
+      required:
+      - message
+      - errors
+      type: object
+    EndChat:
+      properties:
+        ended_by:
+          description: The ID of the user that ended the engagement
+          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
+          type: string
+        pype_id:
+          description: The 'web_chat_pype_id' received with the Create User response
+          type: string
+        source:
+          description: Source of the end engagement request (client or server)
+          example: client
+          type: string
+        user_id:
+          description: The 'id' received with the Create User response
+          format: uuid
+          type: string
+        version:
+          description: API version
+          example: '1'
+          type: string
+      required:
+      - pype_id
+      - user_id
+      - ended_by
+      - source
+      - version
+      type: object
+    Error:
+      properties:
+        message:
+          type: string
+        source:
+          type: string
+        type:
+          type: string
+      required:
+      - source
+      - type
+      - message
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+    Snapshot:
+      properties:
+        from:
+          description: The 'id' received with the Create User response
+          format: uuid
+          type: string
+      required:
+      - from
+      type: object
+    Pong:
+      type: object
+      required:
+      - chat_id
+      - user_id
+      properties:
+        chat_id:
+          type: string
+          format: uuid
+          description: The 'id' of the chat
+        user_id:
+          type: string
+          format: uuid
+          description: The 'id' received with the Create User response
+        seq:
+          type: integer
+          description: Incremental integer, will be the same on Ping response
+          example: 1
+    AnonymousSession:
+      properties:
+        app_id:
+          description: The unique identifier of the Pype that the user will engage with.
+          format: uuid
+          type: string
+        app_type:
+          description: 'The category of the app. Valid options are: ''consumer''.'
+          example: consumer
+          type: string
+        browser_language:
+          description: The language locale used by the client's browser (e.g., 'en-US').
+          example: en-US
+          type: string
+        device_id:
+          description: The device's universally unique identifier (UUID) connecting to the conversation.
+          type: string
+        device_type:
+          description: 'The category of the client device. Valid options include: ''apple,'' ''android'', ''browser,'' ''mobile-browser,'' and ''web.'''
+          example: web
+          type: string
+        ip_address:
+          description: The IP address of the client.
+          type: string
+        language:
+          type: string
+          description: The language used in the microapp.
+          example: en
+        last_viewed_url:
+          description: The most recently visited URL by the client.
+          example: http://www.example.com
+          type: string
+        location:
+          description: The geographical location of the client (e.g., 'Richmond, VA, United States').
+          type: string
+        passthrough:
+          description: Additional user information in JSON format.
+          type: string
+        platform:
+          description: The client's platform or operating system (e.g., 'ios', 'android', 'MacOSX', etc.).
+          example: Mac OS X10_14_4
+          type: string
+        referring_site:
+          description: The website that referred the client.
+          example: http://www.example.com
+          type: string
+        screen_resolution:
+          description: The screen resolution of the client's device (e.g., '1280x720').
+          example: 1280 x 800
+          type: string
+        token:
+          description: The APN/GCM token is provided by the client.
+          format: hash
+          type: string
+        user_browser:
+          description: The browser used by the client.
+          example: Chrome 74.0.3729.131
+          type: string
+      required:
+      - app_id
+      - browser_language
+      - referring_site
+      - user_browser
+      type: object
     NotFound:
       properties:
         errors:
@@ -376,6 +640,53 @@ components:
       required:
       - message
       - errors
+      type: object
+    Ping:
+      type: object
+      required:
+      - user_id
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: The 'id' value obtained from the response of the 'Create User' method.
+        seq:
+          type: integer
+          description: An incremental integer that will be the same in the pong response. This helps in tracking the correspondence between ping and pong messages.
+          example: 1
+    StartChat:
+      properties:
+        app_id:
+          description: The 'app_id' sent when creating a user
+          format: uuid
+          type: string
+        consumer:
+          description: The ID of the consumer.
+          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
+          type: string
+        gateway:
+          description: 'Platform used by the client app. Possible value(s): pypestream_widget'
+          example: pypestream_widget
+          type: string
+        stream_id:
+          description: The 'web_chat_stream_id' received with the Create User response.
+          format: uuid
+          type: string
+        user_id:
+          description: The 'id' received with the Create User response.
+          format: uuid
+          type: string
+        version:
+          description: API version
+          example: '1'
+          type: string
+      required:
+      - app_id
+      - stream_id
+      - user_id
+      - consumer
+      - version
+      - gateway
       type: object
     AnonymousSessionResponse:
       properties:
@@ -458,317 +769,6 @@ components:
       - id
       - web_chat_pype_id
       - web_chat_stream_id
-      type: object
-    SendMessage:
-      properties:
-        app_object:
-          format: hash
-          description: An object for the embedded object data.
-          type: string
-        campaign_id:
-          type: string
-          description: The id of the campaign this message originated from.
-        client_msg_id:
-          type: string
-          description: Client generated unique message id.
-        correlation_id:
-          type: string
-          description: A unique ID set by the client which can be used to correlate the responding acknowledgement of the request.
-        file:
-          description: A URL to a file to embed in the message.
-          format: uri
-          type: string
-        file_status:
-          example: uploading
-          description: 'Indicates if the file is available for downloading from the URL. States are: uploading, ready, failed'
-          type: string
-        from:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-        from_side:
-          description: 'Indicates the source of the message. Possible value(s): anonymous_consumer'
-          example: anonymous_consumer
-          type: string
-        gateway:
-          description: 'Platform used by the client app. Possible value(s): pypestream_widget'
-          example: pypestream_widget
-          type: string
-        msg:
-          description: The message that's being sent
-          type: string
-        msg_type:
-          description: Message type. We support `text` and `embed`. If it is `text`, then the `msg` field is required, but if it is `embed`, then the msg will be null, and the `app_object` and `secure_app_object` fields are required.
-          example: text
-          type: string
-        persist_to_history:
-          type: boolean
-          description: Flags whether this message should be written to the persistent history.
-        secure_app_object:
-          type: boolean
-          description: Flags whether this is a secure message and thus should not be persisted.
-        user_id:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-        version:
-          description: API version
-          example: '1'
-          type: string
-      required:
-      - from
-      - from_side
-      - msg
-      - msg_type
-      - user_id
-      - version
-      - gateway
-      type: object
-    EndChat:
-      properties:
-        ended_by:
-          description: The ID of the user that ended the engagement
-          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
-          type: string
-        pype_id:
-          description: The 'web_chat_pype_id' received with the Create User response
-          type: string
-        source:
-          description: Source of the end engagement request (client or server)
-          example: client
-          type: string
-        user_id:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-        version:
-          description: API version
-          example: '1'
-          type: string
-      required:
-      - pype_id
-      - user_id
-      - ended_by
-      - source
-      - version
-      type: object
-    Type:
-      type: object
-      required:
-      - chat_id
-      - from
-      - is_typing
-      - from_side
-      properties:
-        chat_id:
-          type: string
-          format: uuid
-          description: The 'chat_id' value obtained from the response of the 'Create User' method.
-        from:
-          type: string
-          format: uuid
-          description: The 'id' value obtained from the response of the 'Create User' method.
-        is_typing:
-          type: boolean
-          description: Set to 'true' if the end user is typing and 'false' otherwise.
-          example: true
-        from_side:
-          type: string
-          description: The side that originates the typing status request.
-          example: consumer
-    StartChat:
-      properties:
-        app_id:
-          description: The 'app_id' sent when creating a user
-          format: uuid
-          type: string
-        consumer:
-          description: The ID of the consumer.
-          example: consumer_3fa85f64-5717-4562-b3fc-2c963f66afa6
-          type: string
-        gateway:
-          description: 'Platform used by the client app. Possible value(s): pypestream_widget'
-          example: pypestream_widget
-          type: string
-        stream_id:
-          description: The 'web_chat_stream_id' received with the Create User response.
-          format: uuid
-          type: string
-        user_id:
-          description: The 'id' received with the Create User response.
-          format: uuid
-          type: string
-        version:
-          description: API version
-          example: '1'
-          type: string
-      required:
-      - app_id
-      - stream_id
-      - user_id
-      - consumer
-      - version
-      - gateway
-      type: object
-    Error:
-      properties:
-        message:
-          type: string
-        source:
-          type: string
-        type:
-          type: string
-      required:
-      - source
-      - type
-      - message
-      type: object
-    Snapshot:
-      properties:
-        from:
-          description: The 'id' received with the Create User response
-          format: uuid
-          type: string
-      required:
-      - from
-      type: object
-    Pong:
-      type: object
-      required:
-      - chat_id
-      - user_id
-      properties:
-        chat_id:
-          type: string
-          format: uuid
-          description: The 'id' of the chat
-        user_id:
-          type: string
-          format: uuid
-          description: The 'id' received with the Create User response
-        seq:
-          type: integer
-          description: Incremental integer, will be the same on Ping response
-          example: 1
-    ExistingActiveConversation:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    PreconditionRequired:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
-    AnonymousSession:
-      properties:
-        app_id:
-          description: The unique identifier of the Pype that the user will engage with.
-          format: uuid
-          type: string
-        app_type:
-          description: 'The category of the app. Valid options are: ''consumer''.'
-          example: consumer
-          type: string
-        browser_language:
-          description: The language locale used by the client's browser (e.g., 'en-US').
-          example: en-US
-          type: string
-        device_id:
-          description: The device's universally unique identifier (UUID) connecting to the conversation.
-          type: string
-        device_type:
-          description: 'The category of the client device. Valid options include: ''apple,'' ''android'', ''browser,'' ''mobile-browser,'' and ''web.'''
-          example: web
-          type: string
-        ip_address:
-          description: The IP address of the client.
-          type: string
-        language:
-          type: string
-          description: The language used in the microapp.
-          example: en
-        last_viewed_url:
-          description: The most recently visited URL by the client.
-          example: http://www.example.com
-          type: string
-        location:
-          description: The geographical location of the client (e.g., 'Richmond, VA, United States').
-          type: string
-        passthrough:
-          description: Additional user information in JSON format.
-          type: string
-        platform:
-          description: The client's platform or operating system (e.g., 'ios', 'android', 'MacOSX', etc.).
-          example: Mac OS X10_14_4
-          type: string
-        referring_site:
-          description: The website that referred the client.
-          example: http://www.example.com
-          type: string
-        screen_resolution:
-          description: The screen resolution of the client's device (e.g., '1280x720').
-          example: 1280 x 800
-          type: string
-        token:
-          description: The APN/GCM token is provided by the client.
-          format: hash
-          type: string
-        user_browser:
-          description: The browser used by the client.
-          example: Chrome 74.0.3729.131
-          type: string
-      required:
-      - app_id
-      - browser_language
-      - referring_site
-      - user_browser
-      type: object
-    Ping:
-      type: object
-      required:
-      - user_id
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          description: The 'id' value obtained from the response of the 'Create User' method.
-        seq:
-          type: integer
-          description: An incremental integer that will be the same in the pong response. This helps in tracking the correspondence between ping and pong messages.
-          example: 1
-    InternalError:
-      properties:
-        message:
-          type: string
-      required:
-      - message
       type: object
     SnapshotResponse:
       properties:

@@ -86,18 +86,6 @@ paths:
       - Settings API
 components:
   schemas:
-    BadRequest:
-      properties:
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array
-        message:
-          type: string
-      required:
-      - message
-      - errors
-      type: object
     Error:
       properties:
         message:
@@ -109,6 +97,13 @@ components:
       required:
       - source
       - type
+      - message
+      type: object
+    InternalError:
+      properties:
+        message:
+          type: string
+      required:
       - message
       type: object
     Setting:
@@ -130,12 +125,17 @@ components:
       - callbackURL
       - callbackToken
       type: object
-    InternalError:
+    BadRequest:
       properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
         message:
           type: string
       required:
       - message
+      - errors
       type: object
   securitySchemes:
     BasicAuth:
